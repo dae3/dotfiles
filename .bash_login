@@ -1,0 +1,3 @@
+gpgconf --launch gpg-agent
+startx && sudo shutdown now
+
