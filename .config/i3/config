@@ -15,7 +15,7 @@ floating_modifier $mod
 bindsym $mod+Return exec /usr/bin/urxvt
 
 # start Chrome
-bindsym $mod+b exec chromium
+bindsym $mod+b exec /bin/bash -i -c chrome
 
 # kill focused window
 bindsym $mod+Shift+q kill

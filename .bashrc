@@ -13,6 +13,20 @@ docker_imagecleanup() {
 		xargs docker rmi
 }
 
+chrome() {
+	case $(container_status chromium) in
+		running)
+			docker exec chromium chromium --user-data-dir=/data --new-window 2>1 > /dev/null
+			;;
+		exited)
+			docker start chromium
+			;;
+		*)
+			~/bin/chromium
+			;;
+	esac
+}
+
 android-studio() {
 	case $(container_status android-studio) in
 	running)
