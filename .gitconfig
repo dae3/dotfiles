@@ -1,7 +1,5 @@
-# This is Git's per-user configuration file.
-[user]
-# Please adapt and uncomment the following lines:
-#	name = Daniel Everett
-#	email = deverett@gmail.com
 [user]
 	email = deverett@gmail.com
+	name = Daniel Everett
+[credential]
+	helper = cache

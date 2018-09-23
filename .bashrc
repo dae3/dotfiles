@@ -37,6 +37,7 @@ android-studio() {
 		;;
 	*)
 		~/containers/android-studio/android-studio
+		;;
 	esac
 }
 
