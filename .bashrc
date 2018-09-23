@@ -22,7 +22,7 @@ chrome() {
 			docker start chromium
 			;;
 		*)
-			~/bin/chromium
+			~/containers/chromium/chromium
 			;;
 	esac
 }
