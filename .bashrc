@@ -89,6 +89,8 @@ alias dropbox="docker exec -it dropbox dropbox"
 alias kp=~"/containers/keepass/keepass $@"
 alias dps="docker ps"
 alias hibernate="sudo systemctl start hibernate.target"
+alias gpgtty="gpg-connect-agent updatestartuptty /bye"
+alias syslog="sudo journalctl -f"
 
 PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w(\j)\$ "
 PATH=$PATH:~/bin
