@@ -22,7 +22,7 @@ bindsym $mod+b exec /bin/bash -i -c chrome
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+bindsym $mod+d exec /home/deverett/bin/dmenu_run
 
 # change focus
 bindsym $mod+j focus left

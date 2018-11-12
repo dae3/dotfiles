@@ -13,6 +13,19 @@ docker_imagecleanup() {
 		xargs docker rmi
 }
 
+librecad() {
+	case $(container_status librecad) in
+		running)
+			;;
+		exited)
+			docker start librecad
+			;;
+		*)
+			~/containers/librecad/librecad
+			;;
+	esac
+}
+
 chrome() {
 	case $(container_status chromium) in
 		running)
@@ -28,7 +41,7 @@ chrome() {
 }
 
 android-studio() {
-	case $(container_status android-studio) in
+case $(container_status android-studio) in
 	running)
 		# nothing
 		;;
@@ -38,7 +51,7 @@ android-studio() {
 	*)
 		~/containers/android-studio/android-studio
 		;;
-	esac
+esac
 }
 
 container_status() {
@@ -47,7 +60,7 @@ container_status() {
 }
 
 spotify() {
-docker run -d \
+	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=unix$DISPLAY \
@@ -66,7 +79,7 @@ xc() {
 ykcmd() {
 	docker run \
 		-it \
-	 	--rm \
+		--rm \
 		--name yk \
 		--device /dev/bus/usb:/dev/bus/usb \
 		yk \
@@ -81,7 +94,7 @@ gimp() {
 		-v /media/data:/root/Pictures \
 		--name gimp gimp
 }
-	
+
 alias ykman="ykcmd ykman"
 alias ykpers="ykcmd ykpersonalize"
 
