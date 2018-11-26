@@ -11,4 +11,5 @@ TAPPROP=$(xinput list-props ${TOUCHPAD} |\
 	awk '/Tapping Enabled \(/ { gsub(/[\(\):]/,X); print $4 }')
 xinput set-prop $TOUCHPAD $TAPPROP 1
 
-i3
+. ~/.fehbg
+i3 >> ~/.i3/log
