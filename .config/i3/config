@@ -158,8 +158,8 @@ bindsym --release Ctrl+Mod1+k [class="KeePass2"] focus
 exec ~/.fehbg
 
 # backlight brightness
-bindsym XF86MonBrightnessUp exec xbacklight -inc 5%
-bindsym XF86MonBrightnessDown exec xbacklight -dec 5%
+bindsym XF86MonBrightnessUp exec backbright +
+bindsym XF86MonBrightnessDown exec backbright -
 
 # background
 exec ~/.fehbg &
