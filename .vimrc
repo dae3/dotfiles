@@ -19,12 +19,12 @@ Plugin 'leafgarland/typescript-vim'
 call vundle#end()
 filetype plugin indent on
 
-nnoremap <localleader>2 :ed ~/Dropbox/todo.txt/todo.txt<CR>
+nnoremap <localleader>2 :ed ~/dropbox/todo.txt/todo.txt<CR>
 
 syntax on
 color OceanicNext
 if has('gui_running')
-	set guifont=Consolas:h12:cANSI:qDRAFT
+	set guifont=Inconsolata
 endif
 set guioptions-=T
 set ts=2

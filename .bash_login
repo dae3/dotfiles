@@ -1,2 +1,2 @@
-startx && sudo shutdown now
+#startx && sudo shutdown now
 

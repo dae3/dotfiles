@@ -13,6 +13,19 @@ docker_imagecleanup() {
 		xargs docker rmi
 }
 
+gvim() {
+	case $(container_status gvim) in
+		running)
+			;;
+		exited)
+			docker start gvim
+			;;
+		*)
+			~/containers/gvim/gvim
+			;;
+	esac
+}
+
 librecad() {
 	case $(container_status librecad) in
 		running)
@@ -35,7 +48,7 @@ chrome() {
 			docker start chromium
 			;;
 		*)
-			~/containers/chromium/chromium
+			${HOME}/containers/chromium/chromium
 			;;
 	esac
 }
@@ -60,7 +73,7 @@ container_status() {
 }
 
 spotify() {
-	docker run -d \
+	docker run -d --rm \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=unix$DISPLAY \
@@ -87,12 +100,40 @@ ykcmd() {
 }
 
 gimp() {
-	docker run -d \
+	docker run -d --rm \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e DISPLAY=unix$DISPLAY \
-		-v /media/data:/root/Pictures \
+		-e DISPLAY=unix${DISPLAY} \
+		-v $XAUTHORITY:/keepass/.Xauthority:ro \
+		-e XAUTHORITY="/keepass/.Xauthority" \
+		-h $HOSTNAME \
+		-u $(id -u) \
+		-e HOME=/home \
+		-v ${HOME}:/home \
 		--name gimp gimp
+}
+
+inkscape() {
+	docker run -d --rm \
+		-v /etc/localtime:/etc/localtime:ro \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		-e DISPLAY=unix${DISPLAY} \
+		-h $HOSTNAME \
+		-u $(id -u) \
+		-e HOME=/home \
+		-v ${HOME}:/home \
+		--name inkscape inkscape
+}
+
+keras() {
+	#docker network create keras
+	#docker run -d -it -p 8888:8888 --rm --name jupyter -u$(id -u):$(id -g) tensorflow/tensorflow
+	docker run -it --rm -u1000:1000 -v ~/:/home --name keras -e HOME=/home keras $@
+}
+
+h2o() {
+	docker run -d --name h2o --mount type=bind,source=${HOME}/h2o,target=/data h2o > /dev/null
+	docker logs h2o | tac | awk '/Open H2O/ { print $NF; exit }'
 }
 
 alias ykman="ykcmd ykman"
@@ -102,6 +143,7 @@ alias dropbox="docker exec -it dropbox dropbox"
 alias kp=~"/containers/keepass/keepass $@"
 alias dps="docker ps"
 alias hibernate="sudo systemctl start hibernate.target"
+alias suspend="sudo systemctl start suspend.target"
 alias gpgtty="gpg-connect-agent updatestartuptty /bye"
 alias syslog="sudo journalctl -f"
 
