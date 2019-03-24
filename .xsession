@@ -12,4 +12,4 @@ TAPPROP=$(xinput list-props ${TOUCHPAD} |\
 xinput set-prop $TOUCHPAD $TAPPROP 1
 
 . ~/.fehbg
-i3 >> ~/.i3/log
+i3

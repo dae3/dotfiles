@@ -77,3 +77,5 @@ sh3d
 .xsession-errors
 .zcompdump-nothingtosee-5.3.1
 .zsh_history
+.viminfo
+.xsession-errors.old
