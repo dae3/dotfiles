@@ -40,15 +40,15 @@ librecad() {
 }
 
 chrome() {
-	case $(container_status chromium) in
+	case $(container_status chrome) in
 		running)
-			docker exec chromium chromium --user-data-dir=/data --new-window 2>1 > /dev/null
+			docker exec chrome chrome --user-data-dir=/data --new-window 2>1 > /dev/null
 			;;
 		exited)
-			docker start chromium
+			docker start chrome
 			;;
 		*)
-			${HOME}/containers/chromium/chromium
+			${HOME}/containers/chrome/chrome
 			;;
 	esac
 }
