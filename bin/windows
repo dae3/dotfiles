@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo chmod o+r /dev/sda
+qemu-system-x86_64 -cpu host -smp 2 -m 8G -drive file=/dev/sda,media=disk,format=raw -snapshot -enable-kvm -name "Windows" &

@@ -1,0 +1,16 @@
+#!/bin/bash
+CMD=$(${HOME}/bin/dmenu_path_and_aliases | dmenu "$@")
+
+grep $CMD ~/.cache/dmenu_functions 2>&1 > /dev/null && ISFUNCTION=1
+grep $CMD ~/.cache/dmenu_aliases 2>&1 > /dev/null && ISALIAS=1
+
+if [[ $ISFUNCTION || $ISALIAS ]]; then
+	TMPSH=$(mktemp)
+	chmod u+x $TMPSH
+	echo '#!/bin/bash' > $TMPSH
+	echo $CMD >> $TMPSH
+	${SHELL:-"/bin/sh"} -i $TMPSH 
+	rm $TMPSH
+else
+	$CMD | ${SHELL:-"/bin/sh"} &
+fi

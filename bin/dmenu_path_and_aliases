@@ -1,0 +1,32 @@
+#!/bin/bash
+
+source $HOME/.bashrc
+
+shopt -s expand_aliases
+
+cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
+if [ -d "$cachedir" ]; then
+	cache=$cachedir/dmenu_run
+	aliascache=$cachedir/dmenu_aliases
+	functioncache=$cachedir/dmenu_functions
+else
+	cache=$HOME/.dmenu_cache # if no xdg dir, fall back to dotfile in ~
+	aliascache=$HOME/.dmenu_aliases
+	functioncache=$HOME/.dmenu_functions
+fi
+
+if [[ $HOME/.bashrc -nt "$aliascache" || ! -e "$aliascache" ]]; then
+	alias | sed -Ee 's/^alias ([a-z]+)=.*/\1/' > "$aliascache"
+fi
+
+if [[ $HOME/.bashrc -nt "$functioncache" || ! -e "functioncache" ]]; then
+	declare -f | awk '/^[a-z]/ { print $1 }' > "$functioncache"
+fi
+
+IFS=:
+if stest -dqr -n "$cache" $PATH; then
+	stest -flx $PATH | sort -u > "$cache"
+fi
+
+# should try to cache the sorted combined result
+cat "$cache" "$aliascache" "$functioncache" | sort -u 

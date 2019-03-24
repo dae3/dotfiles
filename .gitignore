@@ -36,7 +36,6 @@ __pycache__
 abuild
 android-studio
 android-studio-config
-bin
 chrome.json
 containers
 dockerfiles

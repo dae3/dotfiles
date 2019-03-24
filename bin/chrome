@@ -1,0 +1,19 @@
+#!/bin/bash
+
+docker run -it \
+	--cpuset-cpus 2 \
+	--group-add audio \
+	--memory 512mb \
+	-v /tmp/.X11-unix:/tmp/.X11-unix \
+	-e DISPLAY=unix$DISPLAY \
+	-v $HOME/downloads:/home/chrome/Downloads \
+	-v $HOME/.config/chrome/:/data \
+	--security-opt seccomp=$HOME/chrome.json \
+	--device /dev/snd \
+	-v $XAUTHORITY:/keepass/.Xauthority:ro \
+	-e XAUTHORITY="/keepass/.Xauthority" \
+	-h $HOSTNAME \
+	-u $(id -u) \
+	-v /dev/shm:/dev/shm \
+	--name chrome \
+	chrome
