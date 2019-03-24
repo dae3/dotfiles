@@ -1,0 +1,15 @@
+# GIMP user context
+
+(tool "gimp-pencil-tool")
+(paint-info "gimp-pencil")
+(background (color-rgb 0.305379 0.651972 0.143816))
+(brush "2. Hardness 050")
+(dynamics "Dynamics Off")
+(mybrush "Standard")
+(pattern "Pine")
+(gradient "FG to BG (RGB)")
+(palette "Color History")
+(font "Sans-serif")
+(tool-preset "Core Pointer")
+
+# end of user context

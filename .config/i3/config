@@ -13,7 +13,7 @@ font pango:Roboto 11
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec /usr/bin/urxvt
+bindsym $mod+Return exec /usr/bin/termit
 
 # start Chrome
 bindsym $mod+b exec /bin/bash -i -c chrome

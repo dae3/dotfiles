@@ -1,0 +1,24 @@
+# GIMP action-history
+
+(history-item "file-export" 1)
+(history-item "file-open" 1)
+(history-item "file-quit" 1)
+(history-item "tools-color-picker" 0)
+(history-item "image-resize" 0)
+(history-item "edit-fill-bg" 0)
+(history-item "file-save-as" 0)
+(history-item "file-export-as" 1)
+(history-item "file-close-all" 0)
+(history-item "image-new" 0)
+(history-item "windows-show-display-next" 0)
+(history-item "windows-show-display-previous" 0)
+(history-item "layers-alpha-add" 0)
+(history-item "filters-color-to-alpha" 0)
+(history-item "image-scale" 0)
+(history-item "layers-new" 0)
+(history-item "script-fu-addborder" 0)
+(history-item "layers-delete" 0)
+(history-item "tools-warp" 0)
+(history-item "image-duplicate" 1)
+
+# end of action-history

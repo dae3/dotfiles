@@ -4,5 +4,5 @@ URxvt*shading: 30
 URxvt*fading:                        30
 URxvt*foreground:                     White
 URxvt*background:                     Black
-URxvt*font:                           xft:Inconsolata
-URxvt*letterSpace: -1
+URxvt*font:                           xft:Meslo
+URxvt*letterSpace: -5
