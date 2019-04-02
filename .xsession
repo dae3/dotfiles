@@ -11,5 +11,8 @@ TAPPROP=$(xinput list-props ${TOUCHPAD} |\
 	awk '/Tapping Enabled \(/ { gsub(/[\(\):]/,X); print $4 }')
 xinput set-prop $TOUCHPAD $TAPPROP 1
 
+# BlueZ pairing agent
+bt-agent -d -p ~/.config/btpin
+
 . ~/.fehbg
 i3
