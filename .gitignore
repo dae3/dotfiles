@@ -79,3 +79,4 @@ sh3d
 .zsh_history
 .viminfo
 .xsession-errors.old
+.vim/bundle/*
