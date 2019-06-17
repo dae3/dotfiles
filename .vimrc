@@ -22,13 +22,20 @@ Plugin 'plasticboy/vim-markdown'
 call vundle#end()
 filetype plugin indent on
 
-nnoremap <localleader>2 :ed ~/dropbox/todo.txt/todo.txt<CR>
+nnoremap <localleader>2 :ed $TODOTXT<CR>
+nnoremap <localleader>U :%s/^([A-E]) //<CR>
 
 syntax on
 color OceanicNext
+
 if has('gui_running')
-	set guifont=Inconsolata
+	if has('win32')
+		set guifont=Consolas:h11
+	else
+		set guifont=Inconsolata
+	endif
 endif
+
 set guioptions-=T
 set ts=2
 set sw=2
