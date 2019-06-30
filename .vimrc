@@ -52,7 +52,6 @@ if has('gui_running')
 	endif
 endif
 
-set guioptions-=T
 set ts=2
 set sw=2
 se ic
@@ -121,14 +120,18 @@ let g:syntastic_javascript_checkers = ['eslint' ]
 iabbrev atolw @Online-Work
 iabbrev gbr Greensborough
 iabbrev p2 PRINCE2
+iabbrev PM Project Manager
 
 " markdown
-let g:vim_markdown_json_frontmatter=1
 let g:vim_markdown_autowrite = 1
+"" auto bullet and wrap don't play well
+"" https://github.com/plasticboy/vim-markdown/issues/232
+let g:vim_markdown_auto_insert_bullets = 0
+let g_vim_markdown_new_list_item_indent = 0
 augroup markdown
 	au!
 	au FileType markdown setlocal conceallevel=2 spell spelllang=en_au
-	au FileType markdown setlocal mousemodel=popup textwidth=50
 	au FileType markdown setlocal textwidth=80 wrap linebreak nolist
 	au FileType markdown AutoSaveToggle
+	au FileType markdown setlocal comments=fb:>,fb:*,fb:+,fb:-
 augroup END
