@@ -4,6 +4,7 @@ filetype off
 call plug#begin('~/.vim/plugged')
 
 Plug 'pangloss/vim-javascript'
+Plug 'pprovost/vim-ps1'
 Plug 'mxw/vim-jsx'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'scrooloose/nerdtree'
@@ -33,6 +34,7 @@ set clipboard+=unnamed
 " ctrlp
 let g:ctrlp_working_path_mode = 'rac'
 let g:ctrlp_switch_buffer = 'E'
+let g:ctrlp_brief_prompt = 1
 
 " todo
 function! GetTodoContext(lnum)
@@ -53,6 +55,8 @@ function! GotoTodoContext(lnum, reverse)
 endfunction
 
 nnoremap <localleader>2 :ed $TODOTXT<CR>
+nnoremap <localleader>2t :tabedit $TODOTXT<CR>
+
 augroup todo
 	autocmd!
 	autocmd FileType todo setlocal autoread 
@@ -67,8 +71,8 @@ augroup todo
 augroup END
 
 syntax on
-color solarized8_high
-" color OceanicNext
+" color solarized8_high
+color OceanicNext
 
 if has('gui_running')
 	set guioptions-=T
@@ -121,6 +125,7 @@ nnoremap _ dd2kp
 
 " vimrc quick change
 nnoremap <leader>ev :vsplit ~/_vimrc<cr>
+nnoremap <leader>evt :tabedit ~/_vimrc<cr>
 nnoremap <leader>sv :source ~/_vimrc<cr>
 augroup vimrc
 	au!
@@ -139,7 +144,7 @@ let g:mucomplete#enable_auto_at_startup=1
 nnoremap <F8> :TagbarOpenAutoClose<CR>
 
 " NERDTree
-map <C-n> :NERDTreeToggle<CR>
+map <C-n> :NERDTreeFocus<CR>
 let NERDTreeMinimalMenu=1
 
 " abbreviations
@@ -151,8 +156,6 @@ iabbrev gbr Greensborough
 iabbrev p2 PRINCE2
 iabbrev PM Project Manager
 iabbrev mgmt management
-" stupid bouncy spacebar
-iabbrev <sp><sp> <sp>
 
 " markdown
 let g:vim_markdown_autowrite = 1
@@ -168,6 +171,7 @@ augroup markdown
 	au FileType markdown setlocal comments=fb:>,fb:*,fb:+,fb:-
 	au FileType markdown setlocal formatoptions -=q
 	au FileType markdown setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^\\s*\[-*+]\\s\\+
+	autocmd FileType markdown autocmd InsertLeave <buffer> :w
 augroup END
 " let g:instant_markdown_slow = 1
 
@@ -329,5 +333,5 @@ nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
 " open-browser
 " nnoremap <silent> B :OpenBrowserSmartSearch expand(<cword>)<cr>
-nnoremap <silent> B <Plug>(openbrowser-smart-search)
-vnoremap <localleader>b <Plug>(openbrowser-smart-search)
+nmap <silent> B <Plug>(openbrowser-smart-search)
+vmap <localleader>B <Plug>(openbrowser-smart-search)
