@@ -136,6 +136,11 @@ h2o() {
 	docker logs h2o | tac | awk '/Open H2O/ { print $NF; exit }'
 }
 
+ng() {
+	rg $1 ~/notes --files-with-matches --no-messages |\
+		fzf --preview 'bat --color=always {}' --bind 'ctrl-p:execute(nvim-qt {})'
+}
+
 alias ykman="ykcmd ykman"
 alias ykpers="ykcmd ykpersonalize"
 
@@ -151,7 +156,8 @@ PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \$ '
 PATH=$PATH:~/bin
 
 # gpg-agent magic
-export GPG_TTY="$(tty)"
-export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-gpg-connect-agent updatestartuptty /bye
-
+if [ -f $(which gpg-connect-agent) ] ; then
+	export GPG_TTY="$(tty)"
+	export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+	gpg-connect-agent updatestartuptty /bye
+fi
