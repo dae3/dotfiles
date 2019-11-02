@@ -24,17 +24,50 @@ Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'tyru/open-browser.vim'
 Plug 'previm/previm'
+"Plug 'dtjm/plantuml-syntax.vim'
+Plug 'aklt/plantuml-syntax'
+Plug 'jeetsukumaran/vim-buffergator'
+Plug 'elzr/vim-json'
+Plug 'hashivim/vim-terraform'
+Plug 'in3d/vim-raml'
+Plug 'xavierchow/vim-swagger-preview'
+Plug 'martinda/jenkinsfile-vim-syntax'
+Plug 'modille/groovy.vim'
 
 call plug#end()
 filetype plugin indent on
 
+set autochdir
+
 " clipboard
 set clipboard+=unnamed
 
+" fugitive
+nnoremap <C-g>a :Gwrite<CR>
+nnoremap <C-g>c :Gcommit<CR>
+
+" json
+au! BufRead,BufNewFile *.json set filetype=json
+
+augroup json_autocmd
+ autocmd!
+ autocmd FileType json set autoindent
+ autocmd FileType json set formatoptions=tcq2l
+ autocmd FileType json set textwidth=78 shiftwidth=2
+ autocmd FileType json set softtabstop=2 tabstop=8
+ autocmd FileType json set expandtab
+ autocmd FileType json set foldmethod=syntax
+augroup END
+							 
 " ctrlp
 let g:ctrlp_working_path_mode = 'rac'
 let g:ctrlp_switch_buffer = 'E'
 let g:ctrlp_brief_prompt = 1
+let g:ctrlp_custom_ignore = 'node_modules'
+
+" buffergator
+let g:buffergator_suppress_keymaps = 1
+nnoremap <C-b> :BuffergatorOpen<CR>
 
 " todo
 function! GetTodoContext(lnum)
@@ -74,6 +107,22 @@ syntax on
 " color solarized8_high
 color OceanicNext
 
+" font stuff
+let g:gfsizebig=14
+let g:gfsizesmall=10
+let g:gfsize=g:gfsizebig
+function! Font_size_toggle()
+	if g:gfsize == g:gfsizebig
+		let g:gfsize = g:gfsizesmall
+	else
+		let g:gfsize = g:gfsizebig
+	endif
+
+	let &guifont='Consolas:h'.g:gfsize
+endfunction
+
+nnoremap <leader>F :call Font_size_toggle()<CR>
+
 if has('gui_running')
 	set guioptions-=T
 	set guioptions-=m
@@ -81,11 +130,15 @@ if has('gui_running')
 	set guioptions-=L
 	set guioptions-=r
 	if has('win32')
-		set guifont=Consolas:h10
+		set guifont="Consolas:h" . g:gfsize
 	else
 		set guifont=Inconsolata
 	endif
+else
+  " blows up for some reason when running in console
+  let g:airline#extensions#tagbar#enabled = 0
 endif
+
 
 set ts=2
 set sw=2
@@ -112,6 +165,7 @@ augroup javascript_folding
 	au FileType javascript setlocal foldmethod=syntax
 	au FileType javascript nnoremap <leader>/ 0i//<esc>
 	au FileType javascript nnoremap <leader>// 02x<esc>
+        au FileType javascript setlocal tabstop=4
 augroup END
 let g:javascript_conceal_function             = "ƒ"
 
@@ -124,9 +178,9 @@ nnoremap _ dd2kp
 
 
 " vimrc quick change
-nnoremap <leader>ev :vsplit ~/_vimrc<cr>
-nnoremap <leader>evt :tabedit ~/_vimrc<cr>
-nnoremap <leader>sv :source ~/_vimrc<cr>
+nnoremap <leader>ev :vsplit ~/.vimrc<cr>
+nnoremap <leader>evt :tabedit ~/.vimrc<cr>
+nnoremap <leader>sv :source ~/.vimrc<cr>
 augroup vimrc
 	au!
 	" au FileType vim au <buffer> BufWritePost :source ~/_vimrc<cr>
@@ -151,7 +205,6 @@ let NERDTreeMinimalMenu=1
 " todo
 iabbrev wtg @Waiting
 iabbrev atolw @Online-Work
-iabbrev gbr Greensborough
 " PRINCE2 study notes
 iabbrev p2 PRINCE2
 iabbrev PM Project Manager
@@ -159,6 +212,15 @@ iabbrev mgmt management
 
 " markdown
 let g:vim_markdown_autowrite = 1
+" insert filename as level 1 title
+function! InsertMarkdownTitle()
+	let l:firstline = getline(1)
+	let l:title = '# ' . expand('%:t:r')
+	if match(l:firstline, l:title) == -1 
+		call append(0, l:title)
+	endif
+endfunction
+
 "" auto bullet and wrap don't play well
 "" https://github.com/plasticboy/vim-markdown/issues/232
 let g:vim_markdown_auto_insert_bullets = 0
@@ -172,6 +234,7 @@ augroup markdown
 	au FileType markdown setlocal formatoptions -=q
 	au FileType markdown setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^\\s*\[-*+]\\s\\+
 	autocmd FileType markdown autocmd InsertLeave <buffer> :w
+	autocmd FileType markdown autocmd BufWritePre <buffer> call InsertMarkdownTitle()
 augroup END
 " let g:instant_markdown_slow = 1
 
@@ -304,7 +367,7 @@ function! TabLabels()
 	let label = v:lnum . ' '
 	let aidx = v:lnum - 1
 
-	if exists(g:tablab[0] && len(g:tablab) == )
+	if exists(g:tablab[0] && len(g:tablab) == 0)
 		echo 'YAY'
 		let label .= g:tablab[aidx]
 	else
@@ -335,3 +398,6 @@ nnoremap <silent> <CR> :nohlsearch<CR><CR>
 " nnoremap <silent> B :OpenBrowserSmartSearch expand(<cword>)<cr>
 nmap <silent> B <Plug>(openbrowser-smart-search)
 vmap <localleader>B <Plug>(openbrowser-smart-search)
+
+" diff
+set diffopt+=,vertical
