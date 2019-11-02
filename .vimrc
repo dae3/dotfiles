@@ -185,7 +185,9 @@ augroup vimrc
 	au!
 	" au FileType vim au <buffer> BufWritePost :source ~/_vimrc<cr>
 	"au BufWritePost _vimrc :source ~/_vimrc<cr>
-augroup END
+	au BufWritePost .vimrc silent write! ~/dotfiles/.vimrc
+	au BufWritePost .vimrc echo "Don't forget to commit"
+	augroup END
 
 " for MUcomplete
 set completeopt+=menuone
