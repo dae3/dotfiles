@@ -90,6 +90,14 @@ endfunction
 nnoremap <localleader>2 :ed $TODOTXT<CR>
 nnoremap <localleader>2t :tabedit $TODOTXT<CR>
 
+" simple Terraform workflow
+augroup terraform
+	autocmd!
+	autocmd FileType terraform setlocal makeprg=terraform\ validate\ -no-color
+	"autocmd FileType terraform autocmd BufWritePost <buffer> :lmake
+	autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
+augroup END
+
 augroup todo
 	autocmd!
 	autocmd FileType todo setlocal autoread 
@@ -403,3 +411,13 @@ vmap <localleader>B <Plug>(openbrowser-smart-search)
 
 " diff
 set diffopt+=,vertical
+
+" diff buffer with saved file
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+command! DiffSaved call s:DiffWithSaved()
