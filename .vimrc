@@ -33,6 +33,7 @@ Plug 'in3d/vim-raml'
 Plug 'xavierchow/vim-swagger-preview'
 Plug 'martinda/jenkinsfile-vim-syntax'
 Plug 'modille/groovy.vim'
+Plug 'mogelbrod/vim-jsonpath'
 
 call plug#end()
 filetype plugin indent on
@@ -253,6 +254,8 @@ augroup END
 " " if hidden is not set, TextEdit might fail.
 set hidden
 
+autocmd FileType terraform let b:coc_root_patterns = ['.terraform' ]
+
 " Some servers have issues with backup files, see #649
 set nobackup
 set nowritebackup
@@ -389,14 +392,6 @@ function! TabLabels()
 endfunction
 
 " set guitablabel=%{TabLabels()}
-
-" neovim specific
-if has('nvim')
-	au VimEnter * GuiPopupmenu 0
-	au VimEnter * GuiTabline 0
-endif
-
-" FZF and ripgrep
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 " nnoremap <C-f> Find
 
@@ -421,3 +416,10 @@ function! s:DiffWithSaved()
   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 command! DiffSaved call s:DiffWithSaved()
+
+" neovim specific
+if has('nvim')
+       au VimEnter * GuiPopupmenu 0
+       au VimEnter * GuiTabline 0
+endif
+
