@@ -34,6 +34,7 @@ Plug 'xavierchow/vim-swagger-preview'
 Plug 'martinda/jenkinsfile-vim-syntax'
 Plug 'modille/groovy.vim'
 Plug 'mogelbrod/vim-jsonpath'
+Plug 'yuttie/comfortable-motion.vim'
 
 call plug#end()
 filetype plugin indent on
