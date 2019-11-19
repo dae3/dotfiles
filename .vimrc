@@ -424,3 +424,10 @@ if has('nvim')
        au VimEnter * GuiTabline 0
 endif
 
+" insert date in useful format for markdown headings
+function! InsertDate()
+  let l:date = strftime("%Y%m%d", localtime())
+  execute 'normal! A' . l:date
+endfunction
+
+inoremap <localleader>mdd <ESC>:call InsertDate()<CR>
