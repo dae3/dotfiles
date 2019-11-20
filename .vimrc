@@ -26,7 +26,7 @@ Plug 'tyru/open-browser.vim'
 Plug 'previm/previm'
 "Plug 'dtjm/plantuml-syntax.vim'
 Plug 'aklt/plantuml-syntax'
-Plug 'jeetsukumaran/vim-buffergator'
+" Plug 'jeetsukumaran/vim-buffergator'
 Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
 Plug 'in3d/vim-raml'
@@ -68,8 +68,8 @@ let g:ctrlp_brief_prompt = 1
 let g:ctrlp_custom_ignore = 'node_modules'
 
 " buffergator
-let g:buffergator_suppress_keymaps = 1
-nnoremap <C-b> :BuffergatorOpen<CR>
+" let g:buffergator_suppress_keymaps = 1
+nnoremap <C-b>  :CocList buffers<CR>
 
 " todo
 function! GetTodoContext(lnum)
