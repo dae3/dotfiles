@@ -115,7 +115,10 @@ augroup END
 
 syntax on
 " color solarized8_high
-color OceanicNext
+color dracula
+
+" good old F5
+nnoremap <silent> <F5> :w \| make <CR>
 
 " font stuff
 let g:gfsizebig=14
