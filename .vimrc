@@ -434,3 +434,13 @@ function! InsertDate()
 endfunction
 
 inoremap <localleader>mdd <ESC>:call InsertDate()<CR>
+
+" selective cursorline 
+augroup cln
+  autocmd!
+  autocmd WinEnter * set cursorline
+  autocmd WinLeave * set nocursorline
+augroup end
+
+" airline cleanup
+let g:airline_section_z=""
