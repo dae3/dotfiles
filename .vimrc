@@ -116,8 +116,7 @@ augroup todo
 augroup END
 
 syntax on
-" color solarized8_high
-color dracula
+color gruvbox
 
 " good old F5
 nnoremap <silent> <F5> :w \| make <CR>
@@ -133,7 +132,7 @@ function! Font_size_toggle()
 		let g:gfsize = g:gfsizebig
 	endif
 
-	let &guifont='Consolas:h'.g:gfsize
+	let &guifont='Fira Code:h'.g:gfsize
 endfunction
 
 nnoremap <leader>F :call Font_size_toggle()<CR>
