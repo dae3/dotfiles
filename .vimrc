@@ -7,7 +7,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'pprovost/vim-ps1'
 Plug 'mxw/vim-jsx'
 Plug 'rafi/awesome-vim-colorschemes'
-Plug 'scrooloose/nerdtree'
+"Plug 'scrooloose/nerdtree'
 Plug 'freitass/todo.txt-vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'godlygeek/tabular'
@@ -35,6 +35,8 @@ Plug 'martinda/jenkinsfile-vim-syntax'
 Plug 'modille/groovy.vim'
 Plug 'mogelbrod/vim-jsonpath'
 Plug 'psliwka/vim-smoothie'
+Plug 'tpope/vim-commentary'
+Plug 'morhetz/gruvbox'
 
 call plug#end()
 filetype plugin indent on
@@ -189,18 +191,27 @@ let maplocalleader="\\"
 nnoremap - ddp
 nnoremap _ dd2kp
 
-
 " vimrc quick change
 nnoremap <leader>ev :vsplit ~/.vimrc<cr>
 nnoremap <leader>evt :tabedit ~/.vimrc<cr>
 nnoremap <leader>sv :source ~/.vimrc<cr>
+
+" vimrc auto reload & don't forget to commit
 augroup vimrc
 	au!
-	" au FileType vim au <buffer> BufWritePost :source ~/_vimrc<cr>
-	"au BufWritePost _vimrc :source ~/_vimrc<cr>
-	au BufWritePost .vimrc silent write! ~/dotfiles/.vimrc
-	au BufWritePost .vimrc echo "Don't forget to commit"
-	augroup END
+	au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc | tabedit ~/dotfiles/.vimrc | call fugitive#Init() | Gstatus
+augroup END
+
+function! VimrcVC()
+	let l:vcvimrc = '~/dotfiles/.vimrc'
+
+	let l:vcvimrcbuf = bufnr(expand(l:vcvimrc))
+	if l:vcvimrcbuf > 0
+		execute "bdelete " . l:vcvimrcbuf . " | write! " l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
+	else
+		execute "write! " . l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
+	endif
+endfunction
 
 " for MUcomplete
 set completeopt+=menuone
@@ -215,6 +226,7 @@ nnoremap <F8> :TagbarOpenAutoClose<CR>
 " NERDTree
 map <C-n> :NERDTreeFocus<CR>
 let NERDTreeMinimalMenu=1
+let NERDTreeHijackNetrw=1
 
 " abbreviations
 " todo
@@ -444,3 +456,11 @@ augroup end
 
 " airline cleanup
 let g:airline_section_z=""
+
+" Jira jump
+function! JiraJump()
+	let l:ticket =  'https://integratedcareportfolio.atlassian.net/browse/NCC-' . expand('<cword>')
+	call openbrowser#open(l:ticket)
+endfunction
+
+nnoremap JJ call JiraJump()<cr>
