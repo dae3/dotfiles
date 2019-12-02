@@ -192,7 +192,7 @@ nnoremap - ddp
 nnoremap _ dd2kp
 
 " vimrc quick change
-nnoremap <leader>ev :vsplit ~/.vimrc<cr>
+nnoremap <leader>ev :ed ~/.vimrc<cr>
 nnoremap <leader>evt :tabedit ~/.vimrc<cr>
 nnoremap <leader>sv :source ~/.vimrc<cr>
 
