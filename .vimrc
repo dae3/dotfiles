@@ -7,26 +7,20 @@ Plug 'pangloss/vim-javascript'
 Plug 'pprovost/vim-ps1'
 Plug 'mxw/vim-jsx'
 Plug 'rafi/awesome-vim-colorschemes'
-"Plug 'scrooloose/nerdtree'
 Plug 'freitass/todo.txt-vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-surround'
 Plug 'digitaltoad/vim-jade'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-" Plugin 'suan/vim-instant-markdown'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'tyru/open-browser.vim'
 Plug 'previm/previm'
-"Plug 'dtjm/plantuml-syntax.vim'
 Plug 'aklt/plantuml-syntax'
-" Plug 'jeetsukumaran/vim-buffergator'
 Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
 Plug 'in3d/vim-raml'
@@ -63,14 +57,6 @@ augroup json_autocmd
  autocmd FileType json set foldmethod=syntax
 augroup END
 							 
-" ctrlp
-let g:ctrlp_working_path_mode = 'rac'
-let g:ctrlp_switch_buffer = 'E'
-let g:ctrlp_brief_prompt = 1
-let g:ctrlp_custom_ignore = 'node_modules'
-
-" buffergator
-" let g:buffergator_suppress_keymaps = 1
 nnoremap <C-b>  :CocList buffers<CR>
 
 " todo
@@ -90,6 +76,9 @@ function! GotoTodoContext(lnum, reverse)
 
 	call search(l:regex, l:sflags)
 endfunction
+
+command!  -nargs=? NotesGrep cd ~/notes | Rg <args>
+command! NotesTodo NotesGrep \[ \]
 
 nnoremap <localleader>2 :ed $TODOTXT<CR>
 nnoremap <localleader>2t :tabedit $TODOTXT<CR>
@@ -463,3 +452,4 @@ function! JiraJump()
 endfunction
 
 nnoremap JJ call JiraJump()<cr>
+
