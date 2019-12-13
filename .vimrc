@@ -14,7 +14,6 @@ Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-surround'
-Plug 'digitaltoad/vim-jade'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -24,13 +23,7 @@ Plug 'aklt/plantuml-syntax'
 Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
 Plug 'in3d/vim-raml'
-Plug 'xavierchow/vim-swagger-preview'
-Plug 'martinda/jenkinsfile-vim-syntax'
 Plug 'modille/groovy.vim'
-Plug 'mogelbrod/vim-jsonpath'
-Plug 'psliwka/vim-smoothie'
-Plug 'tpope/vim-commentary'
-Plug 'morhetz/gruvbox'
 
 call plug#end()
 filetype plugin indent on
@@ -452,4 +445,78 @@ function! JiraJump()
 endfunction
 
 nnoremap JJ call JiraJump()<cr>
+
+" JSON outliner
+function! JsonOutline(srcbuf)
+  let l:lines = getbufline(a:srcbuf,1,'$')
+  let l:data = []
+  let l:lnum = 0
+  let l:outlnum = 1
+  let l:indent = 0
+	if exists("g:jsonoutlinemap")
+		if exists("g:jsonoutlinemap[a:srcbuf]")
+			let l:scrbuf = g:jsonoutlinemap[a:srcbuf]
+		else
+				let l:scrbuf = CreateScratch()
+				let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
+		endif
+	else
+		let l:scrbuf = CreateScratch()
+		let g:jsonoutlinemap = {}
+		let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
+	endif
+  let l:scrwin = bufwinnr(l:scrbuf)
+  execute l:scrwin . 'wincmd w | set ma | let b:srcbuf =' . a:srcbuf . ' | normal! ggdG'
+  while l:lnum < len(l:lines)
+    if l:lines[l:lnum] =~ '^\s*{\|['
+      let l:indent += 1
+    elseif l:lines[l:lnum] =~  '^\s*}\|]'
+      let l:indent -= 1
+    endif
+    let l:match = matchlist(l:lines[l:lnum], '^\s*"\(\w\+\)"') 
+    if l:match != []
+      let l:data = add(l:data, { 'key' : l:match[1], 'iskey' : 1, 'lnum' : l:lnum+1, 'indent' : l:indent })
+      call append(l:outlnum, FormatOneLine(l:data[l:lnum]))
+      let l:outlnum += 1
+    else
+      let l:data = add(l:data, { 'key' : '', 'iskey' : 0, 'lnum' : l:lnum+1,  'indent' : l:indent })
+    endif 
+    let l:lnum += 1
+  endwhile
+
+  setl noma 
+  nnoremap <silent> <buffer> <cr> :call JPJump()<cr>
+endfunction
+
+function! JPJump()
+  let l:line = getline('.')
+  let l:data = matchlist(l:line, '^\s*\(\d\+\) \.* \(\w\+\)')
+  execute bufwinnr(b:srcbuf) . 'wincmd w'
+  execute 'normal! ' . l:data[1] . 'G'
+endfunction
+
+function! FormatOneLine(line)
+  call assert_true(type(a:line) == v:t_dict)
+  if a:line['iskey'] == 1
+    let l:ret = printf("%5d %s %s", a:line['lnum'], repeat('.', a:line['indent']), a:line['key'])
+  else
+    let l:ret = ""
+  endif
+  return l:ret
+endfunction
+
+function! CreateScratch()
+  40 vsplit
+  noswapfile hide enew
+  setlocal buftype=nofile
+  setlocal bufhidden=hide
+  setlocal nospell noswapfile nonumber norelativenumber
+	"setlocal bufname='JSON outline'
+	autocmd! BufUnload <buffer> call DeleteScratch()
+  return bufnr('%')
+endfunction
+
+function! DeleteScratch()
+	echo b:srcbuf
+endfunction
 
