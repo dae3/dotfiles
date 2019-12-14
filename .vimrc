@@ -26,6 +26,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'in3d/vim-raml'
 Plug 'modille/groovy.vim'
 Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-vinegar'
 
 call plug#end()
 filetype plugin indent on
@@ -62,6 +63,20 @@ set completeopt+=menuone
 set completeopt+=noselect
 set shortmess+=c
 set belloff+=ctrlg
+
+"netrw
+let g:netrw_cygwin=0
+let g:netrw_list_cmd="plink HOSTNAME ls -FLa "
+let g:netrw_scp_cmd="pscp -q "
+let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm "
+let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm -f "
+let g:netrw_winsize=20
+let g:netrw_liststyle=3
+nnoremap <silent> <c-o> :Lexplore<cr>
+augroup netrw
+	autocmd!
+	autocmd filetype netrw nnoremap <silent> <buffer> <c-o> :bd!<cr>
+augroup end
 
 " font stuff
 let g:gfsizebig=14
