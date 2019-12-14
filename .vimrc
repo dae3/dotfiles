@@ -24,6 +24,7 @@ Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
 Plug 'in3d/vim-raml'
 Plug 'modille/groovy.vim'
+Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 filetype plugin indent on
@@ -114,7 +115,7 @@ function! Font_size_toggle()
 		let g:gfsize = g:gfsizebig
 	endif
 
-	let &guifont='Fira Code:h'.g:gfsize
+	let &guifont='Anonymous Pro Minus:h'.g:gfsize
 endfunction
 
 nnoremap <leader>F :call Font_size_toggle()<CR>
@@ -126,7 +127,7 @@ if has('gui_running')
 	set guioptions-=L
 	set guioptions-=r
 	if has('win32')
-		set guifont="Consolas:h" . g:gfsize
+		set guifont="Anonymous Pro Minus:h" . g:gfsize
 	else
 		set guifont=Inconsolata
 	endif
