@@ -1,3 +1,4 @@
+" plugin load
 set nocompatible
 filetype off
 
@@ -29,10 +30,68 @@ Plug 'sheerun/vim-polyglot'
 call plug#end()
 filetype plugin indent on
 
+" misc settings
 set autochdir
-
-" clipboard
 set clipboard+=unnamed
+syntax on
+color gruvbox
+nnoremap <silent> <F5> :w \| make <CR>
+nnoremap <localleader>2 :ed $TODOTXT<CR>
+nnoremap <localleader>2t :tabedit $TODOTXT<CR>
+set ts=2
+set sw=2
+se ic
+set encoding=utf-8
+set number
+set relativenumber
+nnoremap <silent> <localleader>n :set relativenumber!<cr>
+let mapleader="\\"
+let maplocalleader="\\"
+nnoremap - ddp
+nnoremap _ dd2kp
+nnoremap <leader>ev :ed ~/.vimrc<cr>
+nnoremap <leader>evt :tabedit ~/.vimrc<cr>
+nnoremap <leader>sv :source ~/.vimrc<cr>
+inoremap <C-s> <esc>:w<CR>
+inoremap <C-s><C-s> <esc>:w<CR>i
+nnoremap <C-s> :w<CR>
+inoremap jk <esc>
+set foldlevel=99
+set spellsuggest=fast
+set completeopt+=menuone
+set completeopt+=noselect
+set shortmess+=c
+set belloff+=ctrlg
+
+" font stuff
+let g:gfsizebig=14
+let g:gfsizesmall=10
+let g:gfsize=g:gfsizebig
+function! Font_size_toggle()
+	if g:gfsize == g:gfsizebig
+		let g:gfsize = g:gfsizesmall
+	else
+		let g:gfsize = g:gfsizebig
+	endif
+
+	let &guifont='Anonymous Pro Minus:h'.g:gfsize
+endfunction
+
+if has('gui_running')
+	set guioptions-=T
+	set guioptions-=m
+	set guioptions-=l
+	set guioptions-=L
+	set guioptions-=r
+	if has('win32')
+		set guifont="Anonymous Pro Minus:h" . g:gfsize
+	else
+		set guifont=Inconsolata
+	endif
+else
+  " blows up for some reason when running in console
+  let g:airline#extensions#tagbar#enabled = 0
+endif
 
 " fugitive
 nnoremap <C-g>a :Gwrite<CR>
@@ -74,9 +133,6 @@ endfunction
 command!  -nargs=? NotesGrep cd ~/notes | Rg <args>
 command! NotesTodo NotesGrep \[ \]
 
-nnoremap <localleader>2 :ed $TODOTXT<CR>
-nnoremap <localleader>2t :tabedit $TODOTXT<CR>
-
 " simple Terraform workflow
 augroup terraform
 	autocmd!
@@ -98,63 +154,7 @@ augroup todo
 	autocmd FileType todo autocmd InsertLeave <buffer> :w
 augroup END
 
-syntax on
-color gruvbox
-
-" good old F5
-nnoremap <silent> <F5> :w \| make <CR>
-
-" font stuff
-let g:gfsizebig=14
-let g:gfsizesmall=10
-let g:gfsize=g:gfsizebig
-function! Font_size_toggle()
-	if g:gfsize == g:gfsizebig
-		let g:gfsize = g:gfsizesmall
-	else
-		let g:gfsize = g:gfsizebig
-	endif
-
-	let &guifont='Anonymous Pro Minus:h'.g:gfsize
-endfunction
-
 nnoremap <leader>F :call Font_size_toggle()<CR>
-
-if has('gui_running')
-	set guioptions-=T
-	set guioptions-=m
-	set guioptions-=l
-	set guioptions-=L
-	set guioptions-=r
-	if has('win32')
-		set guifont="Anonymous Pro Minus:h" . g:gfsize
-	else
-		set guifont=Inconsolata
-	endif
-else
-  " blows up for some reason when running in console
-  let g:airline#extensions#tagbar#enabled = 0
-endif
-
-
-set ts=2
-set sw=2
-se ic
-set encoding=utf-8
-set number
-set relativenumber
-nnoremap <silent> <localleader>n :set relativenumber!<cr>
-
-" misc
-inoremap <C-s> <esc>:w<CR>
-inoremap <C-s><C-s> <esc>:w<CR>i
-nnoremap <C-s> :w<CR>
-inoremap jk <esc>
-set spellsuggest=fast
-
-" folding
-set foldlevel=99
-nnoremap <leader><space> za
 
 " vim-javascript config
 augroup javascript_folding
@@ -165,18 +165,6 @@ augroup javascript_folding
         au FileType javascript setlocal tabstop=4
 augroup END
 let g:javascript_conceal_function             = "ƒ"
-
-let mapleader="\\"
-let maplocalleader="\\"
-
-" line move
-nnoremap - ddp
-nnoremap _ dd2kp
-
-" vimrc quick change
-nnoremap <leader>ev :ed ~/.vimrc<cr>
-nnoremap <leader>evt :tabedit ~/.vimrc<cr>
-nnoremap <leader>sv :source ~/.vimrc<cr>
 
 " vimrc auto reload & don't forget to commit
 augroup vimrc
@@ -195,29 +183,10 @@ function! VimrcVC()
 	endif
 endfunction
 
-" for MUcomplete
-set completeopt+=menuone
-set completeopt+=noselect
-set shortmess+=c
-set belloff+=ctrlg
-let g:mucomplete#enable_auto_at_startup=1
-
-" tagbar etc
-nnoremap <F8> :TagbarOpenAutoClose<CR>
-
-" NERDTree
-map <C-n> :NERDTreeFocus<CR>
-let NERDTreeMinimalMenu=1
-let NERDTreeHijackNetrw=1
-
 " abbreviations
 " todo
 iabbrev wtg @Waiting
 iabbrev atolw @Online-Work
-" PRINCE2 study notes
-iabbrev p2 PRINCE2
-iabbrev PM Project Manager
-iabbrev mgmt management
 
 " markdown
 let g:vim_markdown_autowrite = 1
