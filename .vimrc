@@ -35,7 +35,7 @@ filetype plugin indent on
 set autochdir
 set clipboard+=unnamed
 syntax on
-color gruvbox
+color OceanicNext
 nnoremap <silent> <F5> :w \| make <CR>
 nnoremap <localleader>2 :ed $TODOTXT<CR>
 nnoremap <localleader>2t :tabedit $TODOTXT<CR>
@@ -63,6 +63,7 @@ set completeopt+=menuone
 set completeopt+=noselect
 set shortmess+=c
 set belloff+=ctrlg
+nnoremap <silent> <c-h> :History<cr>
 
 "netrw
 let g:netrw_cygwin=0
@@ -184,7 +185,8 @@ let g:javascript_conceal_function             = "ƒ"
 " vimrc auto reload & don't forget to commit
 augroup vimrc
 	au!
-	au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc | tabedit ~/dotfiles/.vimrc | call fugitive#Init() | Gstatus
+	" au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc | tabedit ~/dotfiles/.vimrc | call fugitive#Init() | Gstatus
+	au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc 
 augroup END
 
 function! VimrcVC()
@@ -491,7 +493,7 @@ function! FormatOneLine(line)
 endfunction
 
 function! CreateScratch()
-  40 vsplit
+  40 vsplit __JSON Outline__
   noswapfile hide enew
   setlocal buftype=nofile
   setlocal bufhidden=hide
