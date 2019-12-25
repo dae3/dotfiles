@@ -1,3 +1,5 @@
+" remember the vc version is at ~/dotfiles/.vimrc
+
 " plugin load
 set nocompatible
 filetype off
@@ -6,10 +8,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'pangloss/vim-javascript'
 Plug 'pprovost/vim-ps1'
-Plug 'mxw/vim-jsx'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'freitass/todo.txt-vim'
-Plug 'leafgarland/typescript-vim'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-fugitive'
@@ -24,7 +24,6 @@ Plug 'aklt/plantuml-syntax'
 Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
 Plug 'in3d/vim-raml'
-Plug 'modille/groovy.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-vinegar'
 
@@ -81,8 +80,9 @@ augroup end
 
 " font stuff
 let g:gfsizebig=14
-let g:gfsizesmall=10
+let g:gfsizesmall=12
 let g:gfsize=g:gfsizebig
+let g:gfname='Inconsolata'
 function! Font_size_toggle()
 	if g:gfsize == g:gfsizebig
 		let g:gfsize = g:gfsizesmall
@@ -90,7 +90,7 @@ function! Font_size_toggle()
 		let g:gfsize = g:gfsizebig
 	endif
 
-	let &guifont='Anonymous Pro Minus:h'.g:gfsize
+	let &guifont=g:gfname . ':h' . g:gfsize
 endfunction
 
 if has('gui_running')
@@ -99,11 +99,6 @@ if has('gui_running')
 	set guioptions-=l
 	set guioptions-=L
 	set guioptions-=r
-	if has('win32')
-		set guifont="Anonymous Pro Minus:h" . g:gfsize
-	else
-		set guifont=Inconsolata
-	endif
 else
   " blows up for some reason when running in console
   let g:airline#extensions#tagbar#enabled = 0
