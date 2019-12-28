@@ -435,26 +435,26 @@ function! JsonOutline(srcbuf)
   let l:lnum = 0
   let l:outlnum = 1
   let l:indent = 0
+
+  " create or find and prepare our scratch buffer
 	if exists("g:jsonoutlinemap")
 		if exists("g:jsonoutlinemap[a:srcbuf]")
 			let l:scrbuf = g:jsonoutlinemap[a:srcbuf]
 		else
-				let l:scrbuf = CreateScratch()
+				let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
 				let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
 		endif
 	else
-		let l:scrbuf = CreateScratch()
+		let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
 		let g:jsonoutlinemap = {}
 		let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
 	endif
   let l:scrwin = bufwinnr(l:scrbuf)
   execute l:scrwin . 'wincmd w | set ma | let b:srcbuf =' . a:srcbuf . ' | normal! ggdG'
+
+  " process the parent buffer
   while l:lnum < len(l:lines)
-    if l:lines[l:lnum] =~ '^\s*{\|['
-      let l:indent += 1
-    elseif l:lines[l:lnum] =~  '^\s*}\|]'
-      let l:indent -= 1
-    endif
+    " only add lines containing a key to the list
     let l:match = matchlist(l:lines[l:lnum], '^\s*"\(\w\+\)"') 
     if l:match != []
       let l:data = add(l:data, { 'key' : l:match[1], 'iskey' : 1, 'lnum' : l:lnum+1, 'indent' : l:indent })
@@ -463,12 +463,23 @@ function! JsonOutline(srcbuf)
     else
       let l:data = add(l:data, { 'key' : '', 'iskey' : 0, 'lnum' : l:lnum+1,  'indent' : l:indent })
     endif 
+
+    " increase indent on { or [, decrease on } or ]
+    " this will fail in non-simple cases like escaped brackets
+    if l:lines[l:lnum] =~ '{\|['
+      let l:indent += 1
+    elseif l:lines[l:lnum] =~  '}\|]'
+      let l:indent -= 1
+    endif
+
     let l:lnum += 1
   endwhile
 
-  setl noma 
+  setl nomodifiable
   nnoremap <silent> <buffer> <cr> :call JPJump()<cr>
 endfunction
+
+command! JsonOutline call JsonOutline(bufnr('%'))
 
 function! JPJump()
   let l:line = getline('.')
@@ -487,18 +498,28 @@ function! FormatOneLine(line)
   return l:ret
 endfunction
 
-function! CreateScratch()
+function! CreateJsonOutlineScratch(srcbuf)
   40 vsplit __JSON Outline__
   noswapfile hide enew
   setlocal buftype=nofile
   setlocal bufhidden=hide
   setlocal nospell noswapfile nonumber norelativenumber
-	"setlocal bufname='JSON outline'
-	autocmd! BufUnload <buffer> call DeleteScratch()
+  let b:scrbuf = a:srcbuf
+	autocmd! BufUnload <buffer> call DeleteJsonOutlineScratch()
   return bufnr('%')
 endfunction
 
-function! DeleteScratch()
-	echo b:srcbuf
+function! DeleteJsonOutlineScratch()
+  " Delete this buffer from g:jsonoutlinemap
+  
+  " Finds the parent buffer from the buffer-local variable of the autocommand's
+  " target buffer. NB: expand('<abuf>') returns String but getbufvar requires
+  " a Number
+  let l:outlinebuf = str2nr(expand('<abuf>'))
+  let l:srcbuf = getbufvar(l:outlinebuf, 'srcbuf')
+  unlet g:jsonoutlinemap[l:srcbuf]
+
+  " clean up the autocommand
+  execute "au! BufUnload <buffer=" . l:outlinebuf . ">"
 endfunction
 
