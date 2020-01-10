@@ -12,7 +12,6 @@ Plug 'rafi/awesome-vim-colorschemes'
 Plug 'freitass/todo.txt-vim'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf'
@@ -33,6 +32,7 @@ filetype plugin indent on
 " misc settings
 set autochdir
 set clipboard+=unnamed
+set splitbelow
 syntax on
 color OceanicNext
 nnoremap <silent> <F5> :w \| make <CR>
@@ -82,7 +82,7 @@ augroup end
 let g:gfsizebig=14
 let g:gfsizesmall=12
 let g:gfsize=g:gfsizebig
-let g:gfname='Inconsolata'
+let g:gfname='Consolas'
 function! Font_size_toggle()
 	if g:gfsize == g:gfsizebig
 		let g:gfsize = g:gfsizesmall
