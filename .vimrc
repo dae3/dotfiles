@@ -72,10 +72,10 @@ let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm "
 let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm -f "
 let g:netrw_winsize=20
 let g:netrw_liststyle=3
-nnoremap <silent> <c-o> :Lexplore<cr>
+nnoremap <silent> <c-n> :Lexplore<cr>
 augroup netrw
 	autocmd!
-	autocmd filetype netrw nnoremap <silent> <buffer> <c-o> :bd!<cr>
+	autocmd filetype netrw nnoremap <silent> <buffer> <c-n> :bd!<cr>
 augroup end
 
 " font stuff
@@ -162,7 +162,8 @@ augroup todo
 
 	autocmd FileType todo nnoremap <buffer> ]] :call GotoTodoContext(line('.'), 0)<cr>
 	autocmd FileType todo nnoremap <buffer> [[ :call GotoTodoContext(line('.'), 1)<cr>
-	autocmd FileType todo autocmd InsertLeave <buffer> :w
+  autocmd FileType todo autocmd InsertLeave <buffer> :w
+  autocmd FileType todo autocmd BufReadPost <buffer> :call TodoPriorityClearPrompted()
 augroup END
 
 nnoremap <leader>F :call Font_size_toggle()<CR>
@@ -523,3 +524,13 @@ function! DeleteJsonOutlineScratch()
   execute "au! BufUnload <buffer=" . l:outlinebuf . ">"
 endfunction
 
+function! TodoPriorityClearPrompted()
+  " Prompt to clear priorities upon opening todo.txt
+  " if it was last modified more than 12 hours ago
+  "
+  if localtime() - getftime(expand('%')) > 43200
+    if input('Reset priorities? ', 'y') == 'y'
+      normal :%s/^([A-E]) //<cr>
+    endif
+  endif
+endfunction
