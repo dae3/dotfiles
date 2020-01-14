@@ -25,6 +25,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'in3d/vim-raml'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-vinegar'
+Plug 'thaerkh/vim-indentguides'
 
 call plug#end()
 filetype plugin indent on
