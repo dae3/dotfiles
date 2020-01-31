@@ -17,7 +17,6 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'tyru/open-browser.vim'
 Plug 'previm/previm'
 Plug 'aklt/plantuml-syntax'
 Plug 'elzr/vim-json'
@@ -380,10 +379,9 @@ command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-h
 " turn off search highlight with <CR>
 nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
-" open-browser
-" nnoremap <silent> B :OpenBrowserSmartSearch expand(<cword>)<cr>
-nmap <silent> B <Plug>(openbrowser-smart-search)
-vmap <localleader>B <Plug>(openbrowser-smart-search)
+" quick Google search
+command! GLucky :call netrw#BrowseX("https://google.com/search?q=" . expand('<cword>'), "0")
+nnoremap <silent> B :GLucky<cr>
 
 " diff
 set diffopt+=,vertical
@@ -535,3 +533,5 @@ function! TodoPriorityClearPrompted()
     endif
   endif
 endfunction
+
+command! VimgrepUnderCursor vimgrep <cword> % | copen
