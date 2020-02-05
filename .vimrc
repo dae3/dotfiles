@@ -38,9 +38,11 @@ color OceanicNext
 nnoremap <silent> <F5> :w \| make <CR>
 nnoremap <localleader>2 :ed $TODOTXT<CR>
 nnoremap <localleader>2t :tabedit $TODOTXT<CR>
-set ts=2
-set sw=2
-se ic
+set tabstop=8
+set shiftwidth=4
+set softtabstop=4
+set noexpandtab
+set ignorecase
 set encoding=utf-8
 set number
 set relativenumber
