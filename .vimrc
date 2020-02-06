@@ -428,7 +428,6 @@ function! JiraJump()
 	call openbrowser#open(l:ticket)
 endfunction
 
-nnoremap JJ call JiraJump()<cr>
 
 " JSON outliner
 function! JsonOutline(srcbuf)
