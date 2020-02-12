@@ -30,6 +30,7 @@ call plug#end()
 filetype plugin indent on
 
 " misc settings
+set hidden
 set autochdir
 set clipboard+=unnamed
 set splitbelow
@@ -237,13 +238,11 @@ augroup markdown
 augroup END
 " let g:instant_markdown_slow = 1
 
+autocmd FileType terraform let b:coc_root_patterns = ['.terraform' ]
+
 " coc.vim 
 " " adapted from https://github.com/neoclide/coc.nvim#example-vim-configuration
 " " if hidden is not set, TextEdit might fail.
-set hidden
-
-autocmd FileType terraform let b:coc_root_patterns = ['.terraform' ]
-
 " Some servers have issues with backup files, see #649
 set nobackup
 set nowritebackup
@@ -272,9 +271,6 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
@@ -318,15 +314,6 @@ augroup mygroup
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
-
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
 nmap <silent> <TAB> <Plug>(coc-range-select)
