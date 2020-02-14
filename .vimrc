@@ -150,7 +150,7 @@ command! NotesTodo NotesGrep \[ \]
 " Powershell profile source control
 augroup psprofile
   autocmd!
-  autocmd BufWritePost ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1 write ~/dotfiles/Microsoft.PowerShell_profile.ps1
+  autocmd BufWritePost ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1 write! ~/dotfiles/Microsoft.PowerShell_profile.ps1
 augroup end
 
 " simple Terraform workflow
