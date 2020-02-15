@@ -69,7 +69,7 @@ nnoremap <silent> <c-h> :History<cr>
 
 "netrw
 let g:netrw_cygwin=0
-let g:netrw_list_cmd="plink HOSTNAME ls -FLa "
+/\s\+$// | retabet g:netrw_list_cmd="plink HOSTNAME ls -FLa "
 let g:netrw_scp_cmd="pscp -q "
 let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm "
 let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm -f "
@@ -77,8 +77,8 @@ let g:netrw_winsize=20
 let g:netrw_liststyle=3
 nnoremap <silent> <c-n> :Lexplore<cr>
 augroup netrw
-	autocmd!
-	autocmd filetype netrw nnoremap <silent> <buffer> <c-n> :bd!<cr>
+    autocmd!
+    autocmd filetype netrw nnoremap <silent> <buffer> <c-n> :bd!<cr>
 augroup end
 
 " font stuff
@@ -87,24 +87,24 @@ let g:gfsizesmall=12
 let g:gfsize=g:gfsizebig
 let g:gfname='Consolas'
 function! Font_size_toggle()
-	if g:gfsize == g:gfsizebig
-		let g:gfsize = g:gfsizesmall
-	else
-		let g:gfsize = g:gfsizebig
-	endif
+    if g:gfsize == g:gfsizebig
+	let g:gfsize = g:gfsizesmall
+    else
+	let g:gfsize = g:gfsizebig
+    endif
 
-	let &guifont=g:gfname . ':h' . g:gfsize
+    let &guifont=g:gfname . ':h' . g:gfsize
 endfunction
 
 if has('gui_running')
-	set guioptions-=T
-	set guioptions-=m
-	set guioptions-=l
-	set guioptions-=L
-	set guioptions-=r
+    set guioptions-=T
+    set guioptions-=m
+    set guioptions-=l
+    set guioptions-=L
+    set guioptions-=r
 else
-  " blows up for some reason when running in console
-  let g:airline#extensions#tagbar#enabled = 0
+    " blows up for some reason when running in console
+    let g:airline#extensions#tagbar#enabled = 0
 endif
 
 " fugitive
@@ -115,33 +115,33 @@ nnoremap <C-g>c :Gcommit<CR>
 au! BufRead,BufNewFile *.json set filetype=json
 
 augroup json_autocmd
- autocmd!
- autocmd FileType json set autoindent
- autocmd FileType json set formatoptions=tcq2l
- autocmd FileType json set textwidth=78 shiftwidth=2
- autocmd FileType json set softtabstop=2 tabstop=8
- autocmd FileType json set expandtab
- autocmd FileType json set foldmethod=syntax
+    autocmd!
+    autocmd FileType json set autoindent
+    autocmd FileType json set formatoptions=tcq2l
+    autocmd FileType json set textwidth=78 shiftwidth=2
+    autocmd FileType json set softtabstop=2 tabstop=8
+    autocmd FileType json set expandtab
+    autocmd FileType json set foldmethod=syntax
 augroup END
-							 
+
 nnoremap <C-b>  :CocList buffers<CR>
 
 " todo
 function! GetTodoContext(lnum)
-	let l:cur_task = getline(a:lnum)
-	let l:at_at = match(l:cur_task, "@")
-	let l:spc_at = match(l:cur_task, " ", l:at_at + 1)
-	return strpart(l:cur_task, l:at_at+1, l:spc_at-l:at_at)
+    let l:cur_task = getline(a:lnum)
+    let l:at_at = match(l:cur_task, "@")
+    let l:spc_at = match(l:cur_task, " ", l:at_at + 1)
+    return strpart(l:cur_task, l:at_at+1, l:spc_at-l:at_at)
 endfunction
 
 function! GotoTodoContext(lnum, reverse)
-	let l:regex = '^\(@' . GetTodoContext(a:lnum) . '\)\@!'
-	let l:sflags = 'w'
-	if a:reverse
-		let l:sflags = 'wb'
-	endif
+    let l:regex = '^\(@' . GetTodoContext(a:lnum) . '\)\@!'
+    let l:sflags = 'w'
+    if a:reverse
+	let l:sflags = 'wb'
+    endif
 
-	call search(l:regex, l:sflags)
+    call search(l:regex, l:sflags)
 endfunction
 
 command!  -nargs=? NotesGrep cd ~/notes | Rg <args>
@@ -149,60 +149,60 @@ command! NotesTodo NotesGrep \[ \]
 
 " Powershell profile source control
 augroup psprofile
-  autocmd!
-  autocmd BufWritePost ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1 write! ~/dotfiles/Microsoft.PowerShell_profile.ps1
+    autocmd!
+    autocmd BufWritePost ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1 write! ~/dotfiles/Microsoft.PowerShell_profile.ps1
 augroup end
 
 " simple Terraform workflow
 augroup terraform
-	autocmd!
-	autocmd FileType terraform setlocal makeprg=terraform\ validate\ -no-color
-	"autocmd FileType terraform autocmd BufWritePost <buffer> :lmake
-	autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
+    autocmd!
+    autocmd FileType terraform setlocal makeprg=terraform\ validate\ -no-color
+    "autocmd FileType terraform autocmd BufWritePost <buffer> :lmake
+    autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
 augroup END
 
 augroup todo
-	autocmd!
-	autocmd FileType todo setlocal autoread 
-	" autocmd FileType todo setlocal spell spelllang=en_au
-	" autocmd FileType todo AutoSaveToggle
-	autocmd FileType todo nnoremap <buffer> <localleader>U :%s/^([A-E]) //<CR>
-	autocmd FileType todo nnoremap <buffer> <localleader>R :g/[IS]R[[:digit:]]\{6}/p<CR>
+    autocmd!
+    autocmd FileType todo setlocal autoread
+    " autocmd FileType todo setlocal spell spelllang=en_au
+    " autocmd FileType todo AutoSaveToggle
+    autocmd FileType todo nnoremap <buffer> <localleader>U :%s/^([A-E]) //<CR>
+    autocmd FileType todo nnoremap <buffer> <localleader>R :g/[IS]R[[:digit:]]\{6}/p<CR>
 
-	autocmd FileType todo nnoremap <buffer> ]] :call GotoTodoContext(line('.'), 0)<cr>
-	autocmd FileType todo nnoremap <buffer> [[ :call GotoTodoContext(line('.'), 1)<cr>
-  autocmd FileType todo autocmd InsertLeave <buffer> :w
-  autocmd FileType todo autocmd BufReadPost <buffer> :call TodoPriorityClearPrompted()
+    autocmd FileType todo nnoremap <buffer> ]] :call GotoTodoContext(line('.'), 0)<cr>
+    autocmd FileType todo nnoremap <buffer> [[ :call GotoTodoContext(line('.'), 1)<cr>
+    autocmd FileType todo autocmd InsertLeave <buffer> :w
+    autocmd FileType todo autocmd BufReadPost <buffer> :call TodoPriorityClearPrompted()
 augroup END
 
 nnoremap <leader>F :call Font_size_toggle()<CR>
 
 " vim-javascript config
 augroup javascript_folding
-	au!
-	au FileType javascript setlocal foldmethod=syntax
-	au FileType javascript nnoremap <leader>/ 0i//<esc>
-	au FileType javascript nnoremap <leader>// 02x<esc>
-        au FileType javascript setlocal tabstop=4
+    au!
+    au FileType javascript setlocal foldmethod=syntax
+    au FileType javascript nnoremap <leader>/ 0i//<esc>
+    au FileType javascript nnoremap <leader>// 02x<esc>
+    au FileType javascript setlocal tabstop=4
 augroup END
 let g:javascript_conceal_function             = "ƒ"
 
 " vimrc auto reload & don't forget to commit
 augroup vimrc
-	au!
-	" au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc | tabedit ~/dotfiles/.vimrc | call fugitive#Init() | Gstatus
-	au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc 
+    au!
+    " au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc | tabedit ~/dotfiles/.vimrc | call fugitive#Init() | Gstatus
+    au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc
 augroup END
 
 function! VimrcVC()
-	let l:vcvimrc = '~/dotfiles/.vimrc'
+    let l:vcvimrc = '~/dotfiles/.vimrc'
 
-	let l:vcvimrcbuf = bufnr(expand(l:vcvimrc))
-	if l:vcvimrcbuf > 0
-		execute "bdelete " . l:vcvimrcbuf . " | write! " l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
-	else
-		execute "write! " . l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
-	endif
+    let l:vcvimrcbuf = bufnr(expand(l:vcvimrc))
+    if l:vcvimrcbuf > 0
+	execute "bdelete " . l:vcvimrcbuf . " | write! " l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
+    else
+	execute "write! " . l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
+    endif
 endfunction
 
 " abbreviations
@@ -214,11 +214,11 @@ iabbrev atolw @Online-Work
 let g:vim_markdown_autowrite = 1
 " insert filename as level 1 title
 function! InsertMarkdownTitle()
-	let l:firstline = getline(1)
-	let l:title = '# ' . expand('%:t:r')
-	if match(l:firstline, l:title) == -1 
-		call append(0, l:title)
-	endif
+    let l:firstline = getline(1)
+    let l:title = '# ' . expand('%:t:r')
+    if match(l:firstline, l:title) == -1
+	call append(0, l:title)
+    endif
 endfunction
 
 "" auto bullet and wrap don't play well
@@ -226,21 +226,21 @@ endfunction
 let g:vim_markdown_auto_insert_bullets = 0
 let g_vim_markdown_new_list_item_indent = 0
 augroup markdown
-	au!
-	au FileType markdown setlocal conceallevel=2 spell spelllang=en_au
-	au FileType markdown setlocal textwidth=0 wrap linebreak nolist
-	" au FileType markdown AutoSaveToggle
-	au FileType markdown setlocal comments=fb:>,fb:*,fb:+,fb:-
-	au FileType markdown setlocal formatoptions -=q
-	au FileType markdown setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^\\s*\[-*+]\\s\\+
-	autocmd FileType markdown autocmd InsertLeave <buffer> :w
-	autocmd FileType markdown autocmd BufWritePre <buffer> call InsertMarkdownTitle()
+    au!
+    au FileType markdown setlocal conceallevel=2 spell spelllang=en_au
+    au FileType markdown setlocal textwidth=0 wrap linebreak nolist
+    " au FileType markdown AutoSaveToggle
+    au FileType markdown setlocal comments=fb:>,fb:*,fb:+,fb:-
+    au FileType markdown setlocal formatoptions -=q
+    au FileType markdown setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^\\s*\[-*+]\\s\\+
+    autocmd FileType markdown autocmd InsertLeave <buffer> :w
+    autocmd FileType markdown autocmd BufWritePre <buffer> call InsertMarkdownTitle()
 augroup END
 " let g:instant_markdown_slow = 1
 
 autocmd FileType terraform let b:coc_root_patterns = ['.terraform' ]
 
-" coc.vim 
+" coc.vim
 " " adapted from https://github.com/neoclide/coc.nvim#example-vim-configuration
 " " if hidden is not set, TextEdit might fail.
 " Some servers have issues with backup files, see #649
@@ -262,14 +262,14 @@ set signcolumn=yes
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+	    \ pumvisible() ? "\<C-n>" :
+	    \ <SID>check_back_space() ? "\<TAB>" :
+	    \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
@@ -290,11 +290,11 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+    if (index(['vim','help'], &filetype) >= 0)
+	execute 'h '.expand('<cword>')
+    else
+	call CocAction('doHover')
+    endif
 endfunction
 
 " Highlight symbol under cursor on CursorHold
@@ -308,11 +308,11 @@ xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    autocmd!
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
 " Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
@@ -352,18 +352,18 @@ let g:airline#extensions#coc#enabled =  1
 
 " tab labels
 function! TabLabels()
-	let label = v:lnum . ' '
-	let aidx = v:lnum - 1
+    let label = v:lnum . ' '
+    let aidx = v:lnum - 1
 
-	if exists(g:tablab[0] && len(g:tablab) == 0)
-		echo 'YAY'
-		let label .= g:tablab[aidx]
-	else
-		let bl = tabpagebuflist(v:lnum)
-		let label .= bufname(bl[tabpagewinnr(v:lnum) - 1])
-	endif
+    if exists(g:tablab[0] && len(g:tablab) == 0)
+	echo 'YAY'
+	let label .= g:tablab[aidx]
+    else
+	let bl = tabpagebuflist(v:lnum)
+	let label .= bufname(bl[tabpagewinnr(v:lnum) - 1])
+    endif
 
-	return label
+    return label
 endfunction
 
 " set guitablabel=%{TabLabels()}
@@ -383,33 +383,33 @@ set diffopt+=,vertical
 
 " diff buffer with saved file
 function! s:DiffWithSaved()
-  let filetype=&ft
-  diffthis
-  vnew | r # | normal! 1Gdd
-  diffthis
-  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+    let filetype=&ft
+    diffthis
+    vnew | r # | normal! 1Gdd
+    diffthis
+    exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 command! DiffSaved call s:DiffWithSaved()
 
 " neovim specific
 if has('nvim')
-       au VimEnter * GuiPopupmenu 0
-       au VimEnter * GuiTabline 0
+    au VimEnter * GuiPopupmenu 0
+    au VimEnter * GuiTabline 0
 endif
 
 " insert date in useful format for markdown headings
 function! InsertDate()
-  let l:date = strftime("%Y%m%d", localtime())
-  execute 'normal! A' . l:date
+    let l:date = strftime("%Y%m%d", localtime())
+    execute 'normal! A' . l:date
 endfunction
 
 inoremap <localleader>mdd <ESC>:call InsertDate()<CR>
 
-" selective cursorline 
+" selective cursorline
 augroup cln
-  autocmd!
-  autocmd WinEnter * set cursorline
-  autocmd WinLeave * set nocursorline
+    autocmd!
+    autocmd WinEnter * set cursorline
+    autocmd WinLeave * set nocursorline
 augroup end
 
 " airline cleanup
@@ -417,115 +417,115 @@ let g:airline_section_z=""
 
 " Jira jump
 function! JiraJump()
-	let l:ticket =  'https://integratedcareportfolio.atlassian.net/browse/NCC-' . expand('<cword>')
-	call openbrowser#open(l:ticket)
+    let l:ticket =  'https://integratedcareportfolio.atlassian.net/browse/NCC-' . expand('<cword>')
+    call openbrowser#open(l:ticket)
 endfunction
 
 
 " JSON outliner
 function! JsonOutline(srcbuf)
-  let l:lines = getbufline(a:srcbuf,1,'$')
-  let l:data = []
-  let l:lnum = 0
-  let l:outlnum = 1
-  let l:indent = 0
+    let l:lines = getbufline(a:srcbuf,1,'$')
+    let l:data = []
+    let l:lnum = 0
+    let l:outlnum = 1
+    let l:indent = 0
 
-  " create or find and prepare our scratch buffer
-	if exists("g:jsonoutlinemap")
-		if exists("g:jsonoutlinemap[a:srcbuf]")
-			let l:scrbuf = g:jsonoutlinemap[a:srcbuf]
-		else
-				let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
-				let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
-		endif
+    " create or find and prepare our scratch buffer
+    if exists("g:jsonoutlinemap")
+	if exists("g:jsonoutlinemap[a:srcbuf]")
+	    let l:scrbuf = g:jsonoutlinemap[a:srcbuf]
 	else
-		let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
-		let g:jsonoutlinemap = {}
-		let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
+	    let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
+	    let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
 	endif
-  let l:scrwin = bufwinnr(l:scrbuf)
-  execute l:scrwin . 'wincmd w | set ma | let b:srcbuf =' . a:srcbuf . ' | normal! ggdG'
-
-  " process the parent buffer
-  while l:lnum < len(l:lines)
-    " only add lines containing a key to the list
-    let l:match = matchlist(l:lines[l:lnum], '^\s*"\(\w\+\)"') 
-    if l:match != []
-      let l:data = add(l:data, { 'key' : l:match[1], 'iskey' : 1, 'lnum' : l:lnum+1, 'indent' : l:indent })
-      call append(l:outlnum, FormatOneLine(l:data[l:lnum]))
-      let l:outlnum += 1
     else
-      let l:data = add(l:data, { 'key' : '', 'iskey' : 0, 'lnum' : l:lnum+1,  'indent' : l:indent })
-    endif 
-
-    " increase indent on { or [, decrease on } or ]
-    " this will fail in non-simple cases like escaped brackets
-    if l:lines[l:lnum] =~ '{\|['
-      let l:indent += 1
-    elseif l:lines[l:lnum] =~  '}\|]'
-      let l:indent -= 1
+	let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
+	let g:jsonoutlinemap = {}
+	let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
     endif
+    let l:scrwin = bufwinnr(l:scrbuf)
+    execute l:scrwin . 'wincmd w | set ma | let b:srcbuf =' . a:srcbuf . ' | normal! ggdG'
 
-    let l:lnum += 1
-  endwhile
+    " process the parent buffer
+    while l:lnum < len(l:lines)
+	" only add lines containing a key to the list
+	let l:match = matchlist(l:lines[l:lnum], '^\s*"\(\w\+\)"')
+	if l:match != []
+	    let l:data = add(l:data, { 'key' : l:match[1], 'iskey' : 1, 'lnum' : l:lnum+1, 'indent' : l:indent })
+	    call append(l:outlnum, FormatOneLine(l:data[l:lnum]))
+	    let l:outlnum += 1
+	else
+	    let l:data = add(l:data, { 'key' : '', 'iskey' : 0, 'lnum' : l:lnum+1,  'indent' : l:indent })
+	endif
 
-  setl nomodifiable
-  nnoremap <silent> <buffer> <cr> :call JPJump()<cr>
+	" increase indent on { or [, decrease on } or ]
+	" this will fail in non-simple cases like escaped brackets
+	if l:lines[l:lnum] =~ '{\|['
+	    let l:indent += 1
+	elseif l:lines[l:lnum] =~  '}\|]'
+	    let l:indent -= 1
+	endif
+
+	let l:lnum += 1
+    endwhile
+
+    setl nomodifiable
+    nnoremap <silent> <buffer> <cr> :call JPJump()<cr>
 endfunction
 
 command! JsonOutline call JsonOutline(bufnr('%'))
 
 function! JPJump()
-  let l:line = getline('.')
-  let l:data = matchlist(l:line, '^\s*\(\d\+\) \.* \(\w\+\)')
-  execute bufwinnr(b:srcbuf) . 'wincmd w'
-  execute 'normal! ' . l:data[1] . 'G'
+    let l:line = getline('.')
+    let l:data = matchlist(l:line, '^\s*\(\d\+\) \.* \(\w\+\)')
+    execute bufwinnr(b:srcbuf) . 'wincmd w'
+    execute 'normal! ' . l:data[1] . 'G'
 endfunction
 
 function! FormatOneLine(line)
-  call assert_true(type(a:line) == v:t_dict)
-  if a:line['iskey'] == 1
-    let l:ret = printf("%5d %s %s", a:line['lnum'], repeat('.', a:line['indent']), a:line['key'])
-  else
-    let l:ret = ""
-  endif
-  return l:ret
+    call assert_true(type(a:line) == v:t_dict)
+    if a:line['iskey'] == 1
+	let l:ret = printf("%5d %s %s", a:line['lnum'], repeat('.', a:line['indent']), a:line['key'])
+    else
+	let l:ret = ""
+    endif
+    return l:ret
 endfunction
 
 function! CreateJsonOutlineScratch(srcbuf)
-  40 vsplit __JSON Outline__
-  noswapfile hide enew
-  setlocal buftype=nofile
-  setlocal bufhidden=hide
-  setlocal nospell noswapfile nonumber norelativenumber
-  let b:scrbuf = a:srcbuf
-	autocmd! BufUnload <buffer> call DeleteJsonOutlineScratch()
-  return bufnr('%')
+    40 vsplit __JSON Outline__
+    noswapfile hide enew
+    setlocal buftype=nofile
+    setlocal bufhidden=hide
+    setlocal nospell noswapfile nonumber norelativenumber
+    let b:scrbuf = a:srcbuf
+    autocmd! BufUnload <buffer> call DeleteJsonOutlineScratch()
+    return bufnr('%')
 endfunction
 
 function! DeleteJsonOutlineScratch()
-  " Delete this buffer from g:jsonoutlinemap
-  
-  " Finds the parent buffer from the buffer-local variable of the autocommand's
-  " target buffer. NB: expand('<abuf>') returns String but getbufvar requires
-  " a Number
-  let l:outlinebuf = str2nr(expand('<abuf>'))
-  let l:srcbuf = getbufvar(l:outlinebuf, 'srcbuf')
-  unlet g:jsonoutlinemap[l:srcbuf]
+    " Delete this buffer from g:jsonoutlinemap
 
-  " clean up the autocommand
-  execute "au! BufUnload <buffer=" . l:outlinebuf . ">"
+    " Finds the parent buffer from the buffer-local variable of the autocommand's
+    " target buffer. NB: expand('<abuf>') returns String but getbufvar requires
+    " a Number
+    let l:outlinebuf = str2nr(expand('<abuf>'))
+    let l:srcbuf = getbufvar(l:outlinebuf, 'srcbuf')
+    unlet g:jsonoutlinemap[l:srcbuf]
+
+    " clean up the autocommand
+    execute "au! BufUnload <buffer=" . l:outlinebuf . ">"
 endfunction
 
 function! TodoPriorityClearPrompted()
-  " Prompt to clear priorities upon opening todo.txt
-  " if it was last modified more than 12 hours ago
-  "
-  if localtime() - getftime(expand('%')) > 43200
-    if input('Reset priorities? ', 'y') == 'y'
-      normal :%s/^([A-E]) //<cr>
+    " Prompt to clear priorities upon opening todo.txt
+    " if it was last modified more than 12 hours ago
+    "
+    if localtime() - getftime(expand('%')) > 43200
+	if input('Reset priorities? ', 'y') == 'y'
+	    normal :%s/^([A-E]) //<cr>
+	endif
     endif
-  endif
 endfunction
 
 command! VimgrepUnderCursor vimgrep <cword> % | copen
