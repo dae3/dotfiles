@@ -38,3 +38,7 @@ function Connect-CdhVm {
     Write-Host -ForegroundColor Green "Connecting to $fullhostname..."
     Start-Process -FilePath ssh.exe -ArgumentList ("-i", $keyPath, $fullhostname) -NoNewWindow -Wait
 }
+
+function Get-MyIPAddress {
+    (Invoke-WebRequest https://api.ipify.org?format=json | convertfrom-json).ip
+}
