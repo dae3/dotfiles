@@ -25,6 +25,7 @@ Plug 'in3d/vim-raml'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-vinegar'
 Plug 'thaerkh/vim-indentguides'
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 filetype plugin indent on
@@ -69,7 +70,7 @@ nnoremap <silent> <c-h> :History<cr>
 
 "netrw
 let g:netrw_cygwin=0
-/\s\+$// | retabet g:netrw_list_cmd="plink HOSTNAME ls -FLa "
+let g:netrw_list_cmd="plink HOSTNAME ls -FLa "
 let g:netrw_scp_cmd="pscp -q "
 let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm "
 let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm -f "
