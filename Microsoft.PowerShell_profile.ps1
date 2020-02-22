@@ -23,7 +23,7 @@ function Connect-CdhVm {
 	    "mtls" { "mtlsuser" }
 	}
 
-    $keyPath = "${ENV:APPDATA}\cdhkeys\${environment}-${hostName}.key"
+    $keyPath = "${ENV:APPDATA}\cdhkeys\${environment}-${baseHost}.key"
     if (-Not (Test-Path $keyPath)) {
 	Write-Host -ForegroundColor Yellow "Fetching private key from Key Vault..."
 	    if (-Not (Test-Path "${ENV:APPDATA}\cdhkeys")) {
@@ -36,9 +36,11 @@ function Connect-CdhVm {
     }
     $fullhostname = "${userName}@ncdhc-${environment}-${baseHost}.australiaeast.cloudapp.azure.com"
     Write-Host -ForegroundColor Green "Connecting to $fullhostname..."
-    Start-Process -FilePath ssh.exe -ArgumentList ("-i", $keyPath, $fullhostname) -NoNewWindow -Wait
+    Start-Process -FilePath ssh.exe -ArgumentList "-i", $keyPath, $fullhostname -NoNewWindow -Wait
 }
 
 function Get-MyIPAddress {
     (Invoke-WebRequest https://api.ipify.org?format=json | convertfrom-json).ip
 }
+
+New-Alias vi -Value nvim
