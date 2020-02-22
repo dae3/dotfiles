@@ -1,1 +1,3 @@
 .vimrc test eol=lf
+.profile test eol=lf
+.bashrc test eol=lf
