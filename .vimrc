@@ -97,19 +97,6 @@ function! Font_size_toggle()
     let &guifont=g:gfname . ':h' . g:gfsize
 endfunction
 
-if has('gui_running')
-    set guioptions-=T
-    set guioptions-=m
-    set guioptions-=l
-    set guioptions-=L
-    set guioptions-=r
-else
-    " blows up for some reason when running in console
-    let g:airline#extensions#tagbar#enabled = 0
-    " hack - otherwise airline ends up bright red for some reason
-    let g:airline_theme='dark'
-endif
-
 " fugitive
 nnoremap <C-g>a :Gwrite<CR>
 nnoremap <C-g>c :Gcommit<CR>
@@ -350,8 +337,9 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-" coc - airline
+" airline
 let g:airline#extensions#coc#enabled =  1
+let g:airline_theme='oceanicnextlight'
 
 " tab labels
 function! TabLabels()
@@ -394,12 +382,6 @@ function! s:DiffWithSaved()
 endfunction
 command! DiffSaved call s:DiffWithSaved()
 
-" neovim specific
-if has('nvim') && exists("g:GuiLoaded")
-    au VimEnter * GuiPopupmenu 0
-    au VimEnter * GuiTabline 0
-endif
-
 " insert date in useful format for markdown headings
 function! InsertDate()
     let l:date = strftime("%Y%m%d", localtime())
@@ -417,6 +399,7 @@ augroup end
 
 " airline cleanup
 let g:airline_section_z=""
+let g:airline_theme="dark"
 
 " Jira jump
 function! JiraJump()
