@@ -40,10 +40,10 @@ color OceanicNext
 nnoremap <silent> <F5> :w \| make <CR>
 nnoremap <localleader>2 :ed $TODOTXT<CR>
 nnoremap <localleader>2t :tabedit $TODOTXT<CR>
-set tabstop=8
-set shiftwidth=4
-set softtabstop=4
-set noexpandtab
+set tabstop=4
+set shiftwidth=2
+set softtabstop=2
+set expandtab
 set ignorecase
 set encoding=utf-8
 set number
@@ -109,8 +109,6 @@ augroup json_autocmd
     autocmd FileType json set autoindent
     autocmd FileType json set formatoptions=tcq2l
     autocmd FileType json set textwidth=78 shiftwidth=2
-    autocmd FileType json set softtabstop=2 tabstop=8
-    autocmd FileType json set expandtab
     autocmd FileType json set foldmethod=syntax
 augroup END
 
@@ -173,7 +171,6 @@ augroup javascript_folding
     au FileType javascript setlocal foldmethod=syntax
     au FileType javascript nnoremap <leader>/ 0i//<esc>
     au FileType javascript nnoremap <leader>// 02x<esc>
-    au FileType javascript setlocal tabstop=4
 augroup END
 let g:javascript_conceal_function             = "ƒ"
 
