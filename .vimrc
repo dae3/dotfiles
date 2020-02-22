@@ -106,6 +106,8 @@ if has('gui_running')
 else
     " blows up for some reason when running in console
     let g:airline#extensions#tagbar#enabled = 0
+    " hack - otherwise airline ends up bright red for some reason
+    let g:airline_theme='dark'
 endif
 
 " fugitive
