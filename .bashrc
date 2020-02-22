@@ -136,10 +136,6 @@ h2o() {
 	docker logs h2o | tac | awk '/Open H2O/ { print $NF; exit }'
 }
 
-ng() {
-	rg $1 ~/notes --files-with-matches --no-messages |\
-		fzf --preview 'bat --color=always {}' --bind 'ctrl-p:execute(nvim-qt {})'
-}
 
 alias ykman="ykcmd ykman"
 alias ykpers="ykcmd ykpersonalize"

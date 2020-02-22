@@ -20,13 +20,4 @@ fi
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
-
-if [ -z ${TMUX} ] ; then
-
-	if [ $(hostname) == 'abox' ] && [ ! $(pgrep dropbox) ] ; then \
-		env -u DISPLAY ${HOME}/.dropbox-dist/dropboxd > /var/run/user/$(id -u)/dropboxd.log  2>&1 &
-	fi
-
-	(tmux -2 attach || tmux -2) && logout
-
-fi
+[ -z ${TMUX} ] && (tmux -2 attach || tmux -2) && logout
