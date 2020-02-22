@@ -393,7 +393,7 @@ endfunction
 command! DiffSaved call s:DiffWithSaved()
 
 " neovim specific
-if has('nvim')
+if has('nvim') && exists("g:GuiLoaded")
     au VimEnter * GuiPopupmenu 0
     au VimEnter * GuiTabline 0
 endif
