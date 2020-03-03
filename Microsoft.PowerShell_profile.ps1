@@ -47,7 +47,9 @@ New-Alias vi -Value nvim
 
 Import-Module 'C:\tools\poshgit\dahlbyk-posh-git-9bda399\src\posh-git.psd1'
 
-function Get-RandomPassword {(iwr "https://www.random.org/passwords/?num=1&len=8&format=plain&rnd=new").content.Trim() }
+function Get-RandomPassword {(Invoke-WebRequest "https://www.random.org/passwords/?num=1&len=8&format=plain&rnd=new").content.Trim() }
 
-function Start-Drone { aws ec2 start-instances --instance-ids i-05f593a4f0ca878d0 }
-function Stop-Drone { aws ec2 stop-instances --instance-ids i-05f593a4f0ca878d0 }
+function Start-Drone { aws ec2 start-instances --instance-ids $ENV:DRONE_INSTANCE_ID }
+function Stop-Drone { aws ec2 stop-instances --instance-ids $ENV:DRONE_INSTANCE_ID }
+
+function Get-TodayTasks { Get-Content $ENV:TODOTXT | Select-String -Pattern '^\([A-Z]\)' }
