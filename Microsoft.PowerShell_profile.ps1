@@ -43,7 +43,8 @@ function Get-MyIPAddress {
     (Invoke-WebRequest https://api.ipify.org?format=json | convertfrom-json).ip
 }
 
-New-Alias vi -Value nvim
+New-Alias -Name tf -Value terraform
+New-Alias -Name vi -Value nvim
 
 Import-Module 'C:\tools\poshgit\dahlbyk-posh-git-9bda399\src\posh-git.psd1'
 
