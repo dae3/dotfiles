@@ -138,7 +138,7 @@ command! NotesTodo NotesGrep \[ \]
 " Powershell profile source control
 augroup psprofile
     autocmd!
-    autocmd BufWritePost ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1 write! ~/dotfiles/Microsoft.PowerShell_profile.ps1
+    autocmd BufWritePost ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1 write! ~/Documents/dotfiles/Microsoft.PowerShell_profile.ps1
 augroup end
 
 " simple Terraform workflow
@@ -178,11 +178,11 @@ let g:javascript_conceal_function             = "ƒ"
 augroup vimrc
     au!
     " au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc | tabedit ~/dotfiles/.vimrc | call fugitive#Init() | Gstatus
-    au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc
+    au BufWritePost .vimrc source % | write! ~/Documents/dotfiles/.vimrc
 augroup END
 
 function! VimrcVC()
-    let l:vcvimrc = '~/dotfiles/.vimrc'
+    let l:vcvimrc = '~/dotfiles/Documents/.vimrc'
 
     let l:vcvimrcbuf = bufnr(expand(l:vcvimrc))
     if l:vcvimrcbuf > 0
