@@ -24,7 +24,6 @@
 .pki
 .python_history
 .spotify
-.ssh
 .wget-hsts
 .xsel.log
 .xsession-errors
@@ -71,7 +70,6 @@ sh3d
 .pki
 .python_history
 .spotify
-.ssh
 .wget-hsts
 .xsel.log
 .xsession-errors
