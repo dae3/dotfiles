@@ -31,6 +31,7 @@ call plug#end()
 filetype plugin indent on
 
 " misc settings
+set title
 set hidden
 set autochdir
 set clipboard+=unnamed
