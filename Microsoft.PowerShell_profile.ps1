@@ -8,7 +8,7 @@ function Stop-NamedProcess {
 
 function Connect-CdhVm {
     Param(
-	    [parameter(Mandatory=$true)] [ValidateSet("dev","sit","uat","prod")][String] $Environment,
+	    [parameter(Mandatory=$true)] [ValidateSet("dev","sit","sit01","uat","prod")][String] $Environment,
 	    [parameter(Mandatory=$true)] [ValidateSet("mule","onto","mtls")] [String] $HostName
     )
 
@@ -54,3 +54,16 @@ function Start-Drone { aws ec2 start-instances --instance-ids $ENV:DRONE_INSTANC
 function Stop-Drone { aws ec2 stop-instances --instance-ids $ENV:DRONE_INSTANCE_ID }
 
 function Get-TodayTasks { Get-Content $ENV:TODOTXT | Select-String -Pattern '^\([A-Z]\)' }
+
+Set-PSReadLineOption -EditMode Vi
+
+function Set-AzureAccount {
+    Param([parameter(Mandatory=$true)] [ValidateSet("smc","cdh")][String] $Environment)
+
+    $cloud = switch($Environment) {
+      "smc" {"EHNSW.SelfManagedCloud.01"}
+      "cdh" {"CDHR-Child Digital Health Record"}
+      }
+
+    az account set -s $cloud
+}
