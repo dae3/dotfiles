@@ -26,6 +26,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-vinegar'
 Plug 'thaerkh/vim-indentguides'
 Plug 'tpope/vim-fugitive'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 call plug#end()
 filetype plugin indent on
@@ -52,6 +53,7 @@ set relativenumber
 nnoremap <silent> <localleader>n :set relativenumber!<cr>
 let mapleader="\\"
 let maplocalleader="\\"
+inoremap <esc> <nop>
 nnoremap - ddp
 nnoremap _ dd2kp
 nnoremap <leader>ev :ed ~/.vimrc<cr>
