@@ -14,19 +14,14 @@ Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-surround'
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'previm/previm'
 Plug 'aklt/plantuml-syntax'
 Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
 Plug 'in3d/vim-raml'
 Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-vinegar'
 Plug 'thaerkh/vim-indentguides'
 Plug 'tpope/vim-fugitive'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 call plug#end()
 filetype plugin indent on
@@ -69,7 +64,6 @@ set completeopt+=menuone
 set completeopt+=noselect
 set shortmess+=c
 set belloff+=ctrlg
-nnoremap <silent> <c-h> :History<cr>
 
 "netrw
 let g:netrw_cygwin=0
