@@ -1,4 +1,4 @@
- remember the vc version is at ~/dotfiles/.vimrc
+ " remember the vc version is at ~/dotfiles/.vimrc
 
 " plugin load
 set nocompatible
@@ -21,7 +21,13 @@ Plug 'in3d/vim-raml'
 Plug 'sheerun/vim-polyglot'
 Plug 'thaerkh/vim-indentguides'
 Plug 'tpope/vim-fugitive'
-
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'powershell -executionpolicy bypass -File install.ps1',
+    \ }
+Plug 'dense-analysis/ale'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf'
 call plug#end()
 filetype plugin indent on
 
@@ -59,10 +65,30 @@ nnoremap <C-s> :w<CR>
 inoremap jk <esc>
 set foldlevel=99
 set spellsuggest=fast
-set completeopt+=menuone
-set completeopt+=noselect
 set shortmess+=c
 set belloff+=ctrlg
+let g:python3_host_prog='c:/Python37/python.exe'
+
+" autokparens
+inoremap { {}<left>
+inoremap [ []<left>
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ` ``<left>
+
+" completion
+set completeopt=preview,menuone,noinsert
+set dictionary=expand('~/Documents/20k.txt')
+let g:LanguageClient_serverCommands = {
+    \ 'javascript': ['node','c:\users\daniel.everett\Documents\tools\javascript-typescript-langserver\lib\language-server-stdio.js'],
+    \ 'terraform': [ 'c:\users\daniel.everett\Documents\tools\terraform-lsp.exe' ],
+    \ }
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+" linting
+let g:ale_linters = { 'javascript': [ 'c:\users\daniel.everett\Documents\tools\javascript-typescript-langserver\node_modules\.bin\tslint.cmd'] }
 
 "netrw
 let g:netrw_cygwin=0
