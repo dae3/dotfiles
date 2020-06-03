@@ -72,11 +72,32 @@ set belloff+=ctrlg
 let g:python3_host_prog='c:/Python37/python.exe'
 
 " autokparens
-inoremap { {}<left>
-inoremap [ []<left>
-inoremap " ""<left>
-inoremap ' ''<left>
-inoremap ` ``<left>
+inoremap <expr> { AutoParen('{','}')
+inoremap <expr> } AutoParen('}')
+inoremap <expr> ( AutoParen('(',')')
+inoremap <expr> ) AutoParen(')')
+inoremap <expr> [ AutoParen('[',']')
+inoremap <expr> ] AutoParen(']')
+inoremap <expr> ' AutoParen("'", "'")
+inoremap <expr> " AutoParen('"', '"')
+inoremap <expr> ` AutoParen('`', '`')
+
+function! AutoParen(char, ...)
+  let l:line = getline('.')
+  if strpart(l:line, col('.')-1,1) == a:char
+    if len(l:line) == col('.')
+      return "\<c-o>A"
+    else
+      return "\<c-o>l"
+    endif
+  else
+    if a:0 == 1
+      return a:char . a:1 . "\<left>"
+    else
+      return a:char
+    endif
+  endif
+endfunction
 
 " ale
 nnoremap <silent> ]c <Plug>(ale_previous_wrap)
