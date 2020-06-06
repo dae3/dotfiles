@@ -2,21 +2,14 @@ setlocal autoread
 nnoremap <buffer> <localleader>U :%s/^([A-E]) //<CR>
 nnoremap <buffer> <localleader>R :g/[IS]R[[:digit:]]\{6}/p<CR>
 
-function! s:GetTodoContext(lnum)
+" Navigate back or forward a context
+function! <SID>GotoTodoContext(lnum, reverse)
   let l:cur_task = getline(a:lnum)
   let l:at_at = match(l:cur_task, "@")
   let l:spc_at = match(l:cur_task, " ", l:at_at + 1)
-  return strpart(l:cur_task, l:at_at+1, l:spc_at-l:at_at)
-endfunction
-
-function! <SID>GotoTodoContext(lnum, reverse)
-  let l:regex = '^\(@' . s:GetTodoContext(a:lnum) . '\)\@!'
-  let l:sflags = 'w'
-  if a:reverse
-    let l:sflags = 'wb'
-  endif
-
-  call search(l:regex, l:sflags)
+  
+  " search for the next (previous) line *not* matching the current line's context
+  call search('^\(@' . strpart(l:cur_task, l:at_at+1, l:spc_at-l:at_at) . '\)\@!', a:reverse ? 'wb' : 'w')
 endfunction
 
 nnoremap <silent> <buffer> ]] :call <SID>GotoTodoContext(line('.'), 0)<cr>
@@ -29,27 +22,23 @@ augroup todo
 augroup END
 
 " Completion
-inoremap <expr> <buffer> @ <SID>TodoAt()
+inoremap <expr> <buffer> @ <SID>TodoCompeteTrigger('@', 1)
+inoremap <expr> <buffer> + <SID>TodoCompeteTrigger('+', 0)
+inoremap <buffer> <Tab> <C-x><C-u>
 setl dictionary=expand('~/Documents/20k.txt')
 
-function! <SID>TodoAt()
-  if col('.') == 1 
-    return "@\<C-X>\<C-U>"
+" Semi-magic character insertion/completion trigger
+function! <SID>TodoCompeteTrigger(triggerchar, firstcol)
+  if col('.') == 1 || ! a:firstcol
+    return a:triggerchar . "\<C-X>\<C-U>"
   else
-    return '@'
+    return a:triggerchar
   endif
 endfunction
 
-function! s:TodoContextMatch(base, _, ctx)
-  if match(a:ctx, a:base) == -1
-    return ''
-  else
-    return a:ctx
-  endif
-endfunction
-
-function! s:TodoGetContext(_, line)
-  let l:at = stridx(a:line, '@')
+" Get the first token starting with a:prefix from a:line
+function! s:TodoGetCompletion(prefix, _, line)
+  let l:at = stridx(a:line, a:prefix)
   if l:at >= 0
     let l:atend = stridx(a:line, ' ', l:at + 1)
     return strcharpart(a:line, l:at, l:atend - l:at)
@@ -58,26 +47,16 @@ function! s:TodoGetContext(_, line)
   endif
 endfunction
 
-function! s:TodoGetAllContexts()
-  let l:lines = getline('.','$')
-  return uniq(sort(map(l:lines, function('s:TodoGetContext'))))
-endfunction
-
 function! TodoCompleteFunc(findstart, base)
+  let l:atmatchcol = match(getline('.'), '@', col('.')-2)
+  let l:plusmatchcol = match(getline('.'), '+', col('.')-2)
+
   if a:findstart == 1
-    let l:matchcol = match(getline('.'), '@')
-    if l:matchcol == -1
-      return -3
-    else
-      return l:matchcol
-    endif
+    return l:atmatchcol == -1 ? l:plusmatchcol == -1 ? -3 : l:plusmatchcol : l:atmatchcol
   else
-    let l:MapFunc = function('s:TodoContextMatch', [a:base])
-    let l:contexts = s:TodoGetAllContexts()
-    return map(l:contexts, l:MapFunc)
+    return uniq(sort(map(getline('.','$'), function('s:TodoGetCompletion', [strcharpart(a:base, 0, 1)]))))
   endif
 endfunction
 
-inoremap <buffer> <Tab> <C-x><C-u>
 
 setlocal completefunc=TodoCompleteFunc
