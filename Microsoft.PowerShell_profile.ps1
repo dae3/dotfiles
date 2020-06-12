@@ -55,7 +55,7 @@ function Stop-Drone { aws ec2 stop-instances --instance-ids $ENV:DRONE_INSTANCE_
 
 function Get-TodayTasks { Get-Content $ENV:TODOTXT | Select-String -Pattern '^\([A-Z]\)' }
 
-Set-PSReadLineOption -EditMode Vi
+Set-PSReadLineOption -EditMode Emacs
 
 function Set-AzureAccount {
     Param([parameter(Mandatory=$true)] [ValidateSet("smc","cdh")][String] $Environment)
