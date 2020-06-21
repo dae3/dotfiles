@@ -21,10 +21,6 @@ Plug 'in3d/vim-raml'
 Plug 'sheerun/vim-polyglot'
 Plug 'thaerkh/vim-indentguides'
 Plug 'tpope/vim-fugitive'
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'powershell -executionpolicy bypass -File install.ps1',
-      \ }
 Plug 'dense-analysis/ale'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf'
@@ -100,19 +96,30 @@ function! AutoParen(char, ...)
 endfunction
 
 " ale
-nnoremap <silent> ]c <Plug>(ale_previous_wrap)
-nnoremap <silent> [c <Plug>(ale_next_wrap)
+let g:ale_fixers= [ 'remove_trailing_lines', 'trim_whitespace' ]
+let g:ale_linters = { 'tf' : ['terraform-lsp'] }
+let g:ale_sign_error = "❌"
+let g:ale_sign_warning = "⚠"
+let g:ale_sign_info = "ⓘ"
+let g:ale_echo_cursor=0
+let g:ale_virtualtext_cursor=1
+let g:ale_completion_enabled=1
+let g:ale_open_list='on_save'
+
+nnoremap <silent> ]c :ALENextWrap<cr>
+nnoremap <silent> [c :ALEPreviousWrap<cr>
+nnoremap <silent> K :ALEHover<cr>
+
+" not ALE specific but borrowed from ale.txt
+" close loclist with buffer
+augroup CloseLoclistWindowGroup
+  autocmd!
+  autocmd QuitPre * if empty(&buftype) | lclose | endif
+augroup END
+
 
 " completion
 set completeopt=preview,menuone,noinsert
-set complete=k~/Documents/20k.txt
-let g:LanguageClient_serverCommands = {
-      \ 'javascript': ['node','c:\users\daniel.everett\Documents\tools\javascript-typescript-langserver\lib\language-server-stdio.js'],
-      \ 'terraform': [ 'c:\users\daniel.everett\Documents\tools\terraform-lsp.exe' ],
-      \ }
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
 "netrw
 let g:netrw_cygwin=0
