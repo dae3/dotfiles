@@ -1,11 +1,6 @@
 setlocal foldmethod=syntax
 
 let b:ale_linters = [ 'clangd' ]
-
-" autoformat on save 
-augroup go
-  au!
-  au BufWritePre <buffer> :call LanguageClient#textDocument_formatting()
-augroup end
+let b:ale_fix_on_save=1
 
 setl omnifunc=ale#completion#OmniFunc
