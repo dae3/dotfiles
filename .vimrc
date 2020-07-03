@@ -96,8 +96,16 @@ function! AutoParen(char, ...)
 endfunction
 
 " ale
-let g:ale_fixers= { '*' : [ 'remove_trailing_lines', 'trim_whitespace' ] }
-let g:ale_linters = { 'tf' : ['terraform-lsp'], 'yaml' : [ 'yaml-language-server' ] }
+let g:ale_fixers= {
+      \ '*' : [ 'remove_trailing_lines', 'trim_whitespace' ],
+      \ 'md' : [ 'prettier' ],
+      \ 'tf' : [ 'terraform', 'remove_trailing_lines', 'trim_whitespace' ],
+      \ }
+let g:ale_linters = {
+ \  'tf' : ['terraform-lsp'],
+ \  'yaml' : [ 'yaml-language-server' ],
+ \  'md': [ 'markdownlint','alex' ]
+ \ }
 let g:ale_sign_error = "❌"
 let g:ale_sign_warning = "⚠"
 let g:ale_sign_info = "ⓘ"
@@ -105,6 +113,7 @@ let g:ale_echo_cursor=0
 let g:ale_virtualtext_cursor=1
 let g:ale_completion_enabled=1
 let g:ale_open_list='on_save'
+let g:ale_fix_on_save=1
 
 nnoremap <silent> ]c :ALENextWrap<cr>
 nnoremap <silent> [c :ALEPreviousWrap<cr>
@@ -139,7 +148,7 @@ augroup end
 let g:gfsizebig=14
 let g:gfsizesmall=9
 let g:gfsize=g:gfsizebig
-let g:gfname='Consolas'
+let g:gfname='Inconsolata NF'
 function! Font_size_toggle()
   if g:gfsize == g:gfsizebig
     let g:gfsize = g:gfsizesmall
@@ -235,6 +244,9 @@ augroup END
 
 " airline
 let g:airline_theme='oceanicnextlight'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_section_z=""
 
 " tab labels
 function! TabLabels()
@@ -291,10 +303,6 @@ augroup cln
   autocmd WinEnter * set cursorline
   autocmd WinLeave * set nocursorline
 augroup end
-
-" airline cleanup
-let g:airline_section_z=""
-let g:airline_theme="dark"
 
 " Jira jump
 function! JiraJump()
