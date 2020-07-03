@@ -67,3 +67,7 @@ function Set-AzureAccount {
 
     az account set -s $cloud
 }
+
+set-prompt
+set-theme Agnoster
+$DefaultUser = 'daniel.everett'
