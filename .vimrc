@@ -74,12 +74,17 @@ inoremap <expr> ( AutoParen('(',')')
 inoremap <expr> ) AutoParen(')')
 inoremap <expr> [ AutoParen('[',']')
 inoremap <expr> ] AutoParen(']')
-inoremap <expr> ' AutoParen("'", "'")
+inoremap <expr> ' AutoParen("'", "'", 1)
 inoremap <expr> " AutoParen('"', '"')
 inoremap <expr> ` AutoParen('`', '`')
 
+" varags
+" 1. closing character
+" 2. if truthy, only insert if there's a leading space
+"    Used to avoid treating an apostrophe as an opening single quote,
 function! AutoParen(char, ...)
   let l:line = getline('.')
+  " step past closing character
   if strpart(l:line, col('.')-1,1) == a:char
     if len(l:line) == col('.')
       return "\<c-o>A"
@@ -87,10 +92,18 @@ function! AutoParen(char, ...)
       return "\<c-o>l"
     endif
   else
-    if a:0 == 1
+    if a:0 == 1  " insert opening and closing characters
       return a:char . a:1 . "\<left>"
+    elseif a:0 == 2
+      " insert opening and closing IF there's a leading space, otherwise just
+      " opening
+      if (a:0 == 2 && a:2 == 1 && strpart(l:line, col('.')-2,1) == ' ')
+        return a:char . a:1 . "\<left>"
+      else
+        return a:char
+      endif
     else
-      return a:char
+      return a:char  " insert closing character
     endif
   endif
 endfunction
@@ -245,6 +258,9 @@ augroup END
 " airline
 let g:airline_theme='oceanicnextlight'
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_splits = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline_skip_empty_sections = 1
 let g:airline_powerline_fonts = 1
 let g:airline_section_z=""
 
