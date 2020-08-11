@@ -49,7 +49,6 @@ set relativenumber
 nnoremap <silent> <localleader>n :set relativenumber!<cr>
 let mapleader="\\"
 let maplocalleader="\\"
-inoremap <esc> <nop>
 nnoremap - ddp
 nnoremap _ dd2kp
 nnoremap <leader>wd :windo diffthis<cr>
@@ -125,8 +124,8 @@ let g:ale_sign_info = "ⓘ"
 let g:ale_echo_cursor=0
 let g:ale_virtualtext_cursor=1
 let g:ale_completion_enabled=1
-let g:ale_open_list='on_save'
 let g:ale_fix_on_save=1
+let g:ale_set_quickfix=1
 
 nnoremap <silent> ]c :ALENextWrap<cr>
 nnoremap <silent> [c :ALEPreviousWrap<cr>
@@ -144,13 +143,6 @@ augroup END
 set completeopt=preview,menuone,noinsert
 
 "netrw
-let g:netrw_cygwin=0
-let g:netrw_list_cmd="plink HOSTNAME ls -FLa "
-let g:netrw_scp_cmd="pscp -q "
-let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm "
-let g:netrw_rm_cmd="plink USEPORT HOSTNAME rm -f "
-let g:netrw_winsize=20
-let g:netrw_liststyle=3
 nnoremap <silent> <c-n> :Lexplore<cr>
 augroup netrw
   autocmd!
