@@ -45,6 +45,10 @@ function Get-MyIPAddress {
 
 New-Alias -Name tf -Value terraform
 New-Alias -Name vi -Value nvim
+New-Alias -Name kc -Value kubectl
+
+function Set-KubeContextNamespace([string] $namespace) { kubectl config set-context --current --namespace $namespace }
+New-Alias -Name kcn -Value Set-KubeContextNamespace
 
 Import-Module 'C:\tools\poshgit\dahlbyk-posh-git-9bda399\src\posh-git.psd1'
 
