@@ -72,6 +72,75 @@ function Set-AzureAccount {
     az account set -s $cloud
 }
 
+
+# xmouse
+Add-Type -TypeDefinition @'
+    using System;
+    using System.Runtime.InteropServices;
+    using System.ComponentModel;
+
+    public static class Spi {
+        [System.FlagsAttribute]
+        private enum Flags : uint {
+            None            = 0x0,
+            UpdateIniFile   = 0x1,
+            SendChange      = 0x2,
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SystemParametersInfo(
+            uint uiAction, uint uiParam, UIntPtr pvParam, Flags flags );
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SystemParametersInfo(
+            uint uiAction, uint uiParam, out bool pvParam, Flags flags );
+
+        private static void check( bool ok ) {
+            if( ! ok )
+                throw new Win32Exception( Marshal.GetLastWin32Error() );
+        }
+
+        private static UIntPtr ToUIntPtr( this int value ) {
+            return new UIntPtr( (uint) value );
+        }
+
+        private static UIntPtr ToUIntPtr( this bool value ) {
+            return new UIntPtr( value ? 1u : 0u );
+        }
+
+        public static bool GetActiveWindowTracking() {
+            bool enabled;
+            check( SystemParametersInfo( 0x1000, 0, out enabled, Flags.None ) );
+            return enabled;
+        }
+
+        public static void SetActiveWindowTracking( bool enabled ) {
+            // note: pvParam contains the boolean (cast to void*), not a pointer to it!
+            check( SystemParametersInfo( 0x1001, 0, enabled.ToUIntPtr(), Flags.SendChange ) );
+        }
+        public static bool GetActiveWindowRaising() {
+            bool enabled;
+            check( SystemParametersInfo( 0x100D, 0, out enabled, Flags.None ) );
+            return enabled;
+        }
+
+        public static void SetActiveWindowRaising( bool enabled ) {
+            // note: pvParam contains the boolean (cast to void*), not a pointer to it!
+            check( SystemParametersInfo( 0x100D, 0, enabled.ToUIntPtr(), Flags.SendChange ) );
+        }
+        public static void SetActiveWindowTrackingTimeout( int millis ) {
+            // note: pvParam contains the boolean (cast to void*), not a pointer to it!
+            check( SystemParametersInfo( 0x2003, 0, millis.ToUIntPtr(), Flags.SendChange ) );
+        }
+    }
+'@
+
+function Set-XMouseBehaviour([bool] $tracking, [bool] $raising, [int] $delay) {
+  [Spi]::SetActiveWindowTracking(  $tracking )
+    [Spi]::SetActiveWindowRaising(  $raising )
+      [Spi]::SetActiveWindowTrackingTimeout( $millis)
+}
+
 set-prompt
 set-theme Agnoster
 $DefaultUser = 'daniel.everett'
