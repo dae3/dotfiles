@@ -153,7 +153,7 @@ augroup end
 let g:gfsizebig=14
 let g:gfsizesmall=9
 let g:gfsize=g:gfsizebig
-let g:gfname='Inconsolata NF'
+let g:gfname='Fira Code Retina'
 function! Font_size_toggle()
   if g:gfsize == g:gfsizebig
     let g:gfsize = g:gfsizesmall
@@ -426,3 +426,5 @@ function! TodoPriorityClearPrompted()
 endfunction
 
 command! VimgrepUnderCursor vimgrep <cword> % | copen
+
+command! -nargs=? -complete=buffer VerticalSplitDiff wincmd o | vsplit | wincmd w | next | windo diffthis
