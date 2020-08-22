@@ -138,7 +138,11 @@ Add-Type -TypeDefinition @'
 function Set-XMouseBehaviour([bool] $tracking, [bool] $raising, [int] $delay) {
   [Spi]::SetActiveWindowTracking(  $tracking )
     [Spi]::SetActiveWindowRaising(  $raising )
-      [Spi]::SetActiveWindowTrackingTimeout( $millis)
+      [Spi]::SetActiveWindowTrackingTimeout( $delay)
+}
+
+function ConvertFrom-Base64String ([String] $encoded) {
+  return [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($encoded))
 }
 
 set-prompt
