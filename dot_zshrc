@@ -1,0 +1,17 @@
+typeset -U path cdpath fpath manpath
+
+bindkey -e
+
+autoload -U compinit && compinit
+
+setopt autocd
+
+if [ -f ~/.config/bubbles-custom.omp.json ]; then
+  eval "$(oh-my-posh init zsh --config ~/.config/bubbles-custom.omp.json)"
+fi
+if [ -d /home/linuxbrew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+eval "$(direnv hook zsh)"
+hash -d acl="$HOME/ACloud"
+hash -d labs="$HOME/labs"

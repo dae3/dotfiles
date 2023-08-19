@@ -1,0 +1,432 @@
+" remember the vc version is at ~/dotfiles/.vimrc
+
+" plugin load
+set nocompatible
+filetype off
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'pangloss/vim-javascript'
+Plug 'pprovost/vim-ps1'
+Plug 'rafi/awesome-vim-colorschemes'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+Plug 'vim-airline/vim-airline'
+Plug 'tpope/vim-surround'
+Plug 'aklt/plantuml-syntax'
+Plug 'elzr/vim-json'
+Plug 'hashivim/vim-terraform'
+Plug 'in3d/vim-raml'
+Plug 'sheerun/vim-polyglot'
+Plug 'thaerkh/vim-indentguides'
+Plug 'tpope/vim-fugitive'
+Plug 'dense-analysis/ale'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'preservim/tagbar'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-fireplace'
+Plug 'guns/vim-sexp'
+call plug#end()
+filetype plugin indent on
+
+" misc settings
+set title
+set hidden
+set autochdir
+set clipboard+=unnamed
+set splitbelow
+syntax on
+color OceanicNext
+nnoremap <silent> <F5> :w \| make <CR>
+set tabstop=4
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set ignorecase
+set encoding=utf-8
+set number
+set relativenumber
+nnoremap <silent> <localleader>n :set relativenumber!<cr>
+let mapleader="\\"
+let maplocalleader="\\"
+nnoremap - ddp
+nnoremap _ dd2kp
+nnoremap <leader>wd :windo diffthis<cr>
+nnoremap <leader>wdo :windo diffoff<cr>
+nnoremap <leader>ev :ed ~/.vimrc<cr>
+nnoremap <leader>evt :tabedit ~/.vimrc<cr>
+nnoremap <leader>sv :source ~/.vimrc<cr>
+inoremap <C-s> <esc>:w<CR>
+inoremap <C-s><C-s> <esc>:w<CR>i
+nnoremap <C-s> :w<CR>
+inoremap jk <esc>
+set foldlevel=99
+set spellsuggest=fast
+set shortmess+=c
+set belloff+=ctrlg
+let g:python3_host_prog='c:/Python37/python.exe'
+
+" autokparens
+inoremap <expr> { AutoParen('{','}')
+inoremap <expr> } AutoParen('}')
+inoremap <expr> ( AutoParen('(',')')
+inoremap <expr> ) AutoParen(')')
+inoremap <expr> [ AutoParen('[',']')
+inoremap <expr> ] AutoParen(']')
+inoremap <expr> ' AutoParen("'", "'", 1)
+inoremap <expr> " AutoParen('"', '"')
+inoremap <expr> ` AutoParen('`', '`')
+
+" varags
+" 1. closing character
+" 2. if truthy, only insert if there's a leading space
+"    Used to avoid treating an apostrophe as an opening single quote,
+function! AutoParen(char, ...)
+  let l:line = getline('.')
+  " step past closing character
+  if strpart(l:line, col('.')-1,1) == a:char
+    if len(l:line) == col('.')
+      return "\<c-o>A"
+    else
+      return "\<c-o>l"
+    endif
+  else
+    if a:0 == 1  " insert opening and closing characters
+      return a:char . a:1 . "\<left>"
+    elseif a:0 == 2
+      " insert opening and closing IF there's a leading space, otherwise just
+      " opening
+      if (a:0 == 2 && a:2 == 1 && strpart(l:line, col('.')-2,1) == ' ')
+        return a:char . a:1 . "\<left>"
+      else
+        return a:char
+      endif
+    else
+      return a:char  " insert closing character
+    endif
+  endif
+endfunction
+
+" ale
+let g:ale_fixers= {
+      \ '*' : [ 'remove_trailing_lines', 'trim_whitespace' ],
+      \ 'md' : [ 'prettier' ],
+      \ 'tf' : [ 'terraform', 'remove_trailing_lines', 'trim_whitespace' ],
+      \ 'go' : [ 'gofmt', 'remove_trailing_lines', 'trim_whitespace' ]
+      \ }
+let g:ale_linters = {
+      \  'tf' : ['terraform-lsp'],
+      \  'yaml' : [ 'yaml-language-server' ],
+      \  'md': [ 'markdownlint','alex' ],
+      \  'go': [ 'gopls' ]
+      \ }
+let g:ale_sign_error = "❌"
+let g:ale_sign_warning = "⚠"
+let g:ale_sign_info = "ⓘ"
+let g:ale_echo_cursor=0
+let g:ale_virtualtext_cursor=1
+let g:ale_completion_enabled=1
+let g:ale_fix_on_save=1
+let g:ale_set_quickfix=1
+let g:ale_yaml_ls_config = {
+      \ "yaml": {
+        \ "schemas":{
+        \ "https://github.com/yannh/kubernetes-json-schema/raw/master/v1.21.0-standalone/all.json":"*"
+        \ },
+        \ "trace":{
+          \ "server":"verbose"
+        \ }
+        \ }
+      \}
+
+nnoremap <silent> ]c :ALENextWrap<cr>
+nnoremap <silent> [c :ALEPreviousWrap<cr>
+nnoremap <silent> K :ALEHover<cr>
+
+" not ALE specific but borrowed from ale.txt
+" close loclist with buffer
+augroup CloseLoclistWindowGroup
+  autocmd!
+  autocmd QuitPre * if empty(&buftype) | lclose | endif
+augroup END
+
+
+" completion
+set completeopt=preview,menuone,noinsert
+
+"netrw
+nnoremap <silent> <c-n> :Lexplore<cr>
+augroup netrw
+  autocmd!
+  autocmd filetype netrw nnoremap <silent> <buffer> <c-n> :bd!<cr>
+augroup end
+
+" font stuff
+let g:gfsizebig=14
+let g:gfsizesmall=9
+let g:gfsize=g:gfsizebig
+let g:gfname='Fira Code Retina'
+function! Font_size_toggle()
+  if g:gfsize == g:gfsizebig
+    let g:gfsize = g:gfsizesmall
+  else
+    let g:gfsize = g:gfsizebig
+  endif
+
+  let &guifont=g:gfname . ':h' . g:gfsize
+endfunction
+
+" fugitive
+nnoremap <C-g>a :Gwrite<CR>
+nnoremap <C-g>c :Gcommit<CR>
+
+" json
+au! BufRead,BufNewFile *.json set filetype=json
+
+augroup json_autocmd
+  autocmd!
+  autocmd FileType json set autoindent
+  autocmd FileType json set formatoptions=tcq2l
+  autocmd FileType json set textwidth=78 shiftwidth=2
+  autocmd FileType json set foldmethod=syntax
+augroup END
+
+command!  -nargs=? NotesGrep cd ~/notes | Rg <args>
+
+" Powershell profile source control
+augroup psprofile
+  autocmd!
+  autocmd BufWritePost ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1 write! ~/Documents/dotfiles/Microsoft.PowerShell_profile.ps1
+augroup end
+
+" simple Terraform workflow
+augroup terraform
+  autocmd!
+  autocmd FileType terraform setlocal makeprg=terraform\ validate\ -no-color
+  "autocmd FileType terraform autocmd BufWritePost <buffer> :lmake
+  autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
+augroup END
+
+nnoremap <leader>F :call Font_size_toggle()<CR>
+
+
+" vimrc auto reload & don't forget to commit
+augroup vimrc
+  au!
+  " au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc | tabedit ~/dotfiles/.vimrc | call fugitive#Init() | Gstatus
+  au BufWritePost .vimrc source % | write! ~/Documents/dotfiles/.vimrc
+augroup END
+
+function! VimrcVC()
+  let l:vcvimrc = '~/dotfiles/Documents/.vimrc'
+
+  let l:vcvimrcbuf = bufnr(expand(l:vcvimrc))
+  if l:vcvimrcbuf > 0
+    execute "bdelete " . l:vcvimrcbuf . " | write! " l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
+  else
+    execute "write! " . l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
+  endif
+endfunction
+
+" abbreviations
+
+" markdown
+let g:vim_markdown_autowrite = 1
+" insert filename as level 1 title
+function! InsertMarkdownTitle()
+  let l:firstline = getline(1)
+  let l:title = '# ' . expand('%:t:r')
+  if match(l:firstline, l:title) == -1
+    call append(0, l:title)
+  endif
+endfunction
+
+"" auto bullet and wrap don't play well
+"" https://github.com/plasticboy/vim-markdown/issues/232
+let g:vim_markdown_auto_insert_bullets = 0
+let g_vim_markdown_new_list_item_indent = 0
+augroup markdown
+  au!
+  au FileType markdown setlocal conceallevel=2 spell spelllang=en_au
+  au FileType markdown setlocal textwidth=0 wrap linebreak nolist
+  " au FileType markdown AutoSaveToggle
+  au FileType markdown setlocal comments=fb:>,fb:*,fb:+,fb:-
+  au FileType markdown setlocal formatoptions -=q
+  au FileType markdown setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^\\s*\[-*+]\\s\\+
+  autocmd FileType markdown autocmd InsertLeave <buffer> :w
+  autocmd FileType markdown autocmd BufWritePre <buffer> call InsertMarkdownTitle()
+augroup END
+" let g:instant_markdown_slow = 1
+
+" airline
+let g:airline_theme='oceanicnextlight'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_splits = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline_skip_empty_sections = 1
+let g:airline_powerline_fonts = 1
+let g:airline_section_z=""
+
+" tab labels
+function! TabLabels()
+  let label = v:lnum . ' '
+  let aidx = v:lnum - 1
+
+  if exists(g:tablab[0] && len(g:tablab) == 0)
+    echo 'YAY'
+    let label .= g:tablab[aidx]
+  else
+    let bl = tabpagebuflist(v:lnum)
+    let label .= bufname(bl[tabpagewinnr(v:lnum) - 1])
+  endif
+
+  return label
+endfunction
+
+" set guitablabel=%{TabLabels()}
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+" nnoremap <C-f> Find
+
+
+" turn off search highlight with <CR>
+nnoremap <silent> <CR> :nohlsearch<CR><CR>
+
+" quick Google search
+command! GLucky :call netrw#BrowseX("https://google.com/search?q=" . expand('<cword>'), "0")
+nnoremap <silent> B :GLucky<cr>
+
+" diff
+set diffopt+=,vertical
+
+" diff buffer with saved file
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+command! DiffSaved call s:DiffWithSaved()
+
+" insert date in useful format for markdown headings
+function! InsertDate()
+  let l:date = strftime("%Y%m%d", localtime())
+  execute 'normal! A' . l:date
+endfunction
+
+inoremap <localleader>mdd <ESC>:call InsertDate()<CR>
+
+" selective cursorline
+augroup cln
+  autocmd!
+  autocmd WinEnter * set cursorline
+  autocmd WinLeave * set nocursorline
+augroup end
+
+" Jira jump
+function! JiraJump()
+  let l:ticket =  'https://integratedcareportfolio.atlassian.net/browse/NCC-' . expand('<cword>')
+  call openbrowser#open(l:ticket)
+endfunction
+
+
+" JSON outliner
+function! JsonOutline(srcbuf)
+  let l:lines = getbufline(a:srcbuf,1,'$')
+  let l:data = []
+  let l:lnum = 0
+  let l:outlnum = 1
+  let l:indent = 0
+
+  " create or find and prepare our scratch buffer
+  if exists("g:jsonoutlinemap")
+    if exists("g:jsonoutlinemap[a:srcbuf]")
+      let l:scrbuf = g:jsonoutlinemap[a:srcbuf]
+    else
+      let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
+      let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
+    endif
+  else
+    let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
+    let g:jsonoutlinemap = {}
+    let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
+  endif
+  let l:scrwin = bufwinnr(l:scrbuf)
+  execute l:scrwin . 'wincmd w | set ma | let b:srcbuf =' . a:srcbuf . ' | normal! ggdG'
+
+  " process the parent buffer
+  while l:lnum < len(l:lines)
+    " only add lines containing a key to the list
+    let l:match = matchlist(l:lines[l:lnum], '^\s*"\(\w\+\)"')
+    if l:match != []
+      let l:data = add(l:data, { 'key' : l:match[1], 'iskey' : 1, 'lnum' : l:lnum+1, 'indent' : l:indent })
+      call append(l:outlnum, FormatOneLine(l:data[l:lnum]))
+      let l:outlnum += 1
+    else
+      let l:data = add(l:data, { 'key' : '', 'iskey' : 0, 'lnum' : l:lnum+1,  'indent' : l:indent })
+    endif
+
+    " increase indent on { or [, decrease on } or ]
+    " this will fail in non-simple cases like escaped brackets
+    if l:lines[l:lnum] =~ '{\|['
+      let l:indent += 1
+    elseif l:lines[l:lnum] =~  '}\|]'
+      let l:indent -= 1
+    endif
+
+    let l:lnum += 1
+  endwhile
+
+  setl nomodifiable
+  nnoremap <silent> <buffer> <cr> :call JPJump()<cr>
+endfunction
+
+command! JsonOutline call JsonOutline(bufnr('%'))
+
+function! JPJump()
+  let l:line = getline('.')
+  let l:data = matchlist(l:line, '^\s*\(\d\+\) \.* \(\w\+\)')
+  execute bufwinnr(b:srcbuf) . 'wincmd w'
+  execute 'normal! ' . l:data[1] . 'G'
+endfunction
+
+function! FormatOneLine(line)
+  call assert_true(type(a:line) == v:t_dict)
+  if a:line['iskey'] == 1
+    let l:ret = printf("%5d %s %s", a:line['lnum'], repeat('.', a:line['indent']), a:line['key'])
+  else
+    let l:ret = ""
+  endif
+  return l:ret
+endfunction
+
+function! CreateJsonOutlineScratch(srcbuf)
+  40 vsplit __JSON Outline__
+  noswapfile hide enew
+  setlocal buftype=nofile
+  setlocal bufhidden=hide
+  setlocal nospell noswapfile nonumber norelativenumber
+  let b:scrbuf = a:srcbuf
+  autocmd! BufUnload <buffer> call DeleteJsonOutlineScratch()
+  return bufnr('%')
+endfunction
+
+function! DeleteJsonOutlineScratch()
+  " Delete this buffer from g:jsonoutlinemap
+
+  " Finds the parent buffer from the buffer-local variable of the autocommand's
+  " target buffer. NB: expand('<abuf>') returns String but getbufvar requires
+  " a Number
+  let l:outlinebuf = str2nr(expand('<abuf>'))
+  let l:srcbuf = getbufvar(l:outlinebuf, 'srcbuf')
+  unlet g:jsonoutlinemap[l:srcbuf]
+
+  " clean up the autocommand
+  execute "au! BufUnload <buffer=" . l:outlinebuf . ">"
+endfunction
+
+command! VimgrepUnderCursor vimgrep <cword> % | copen
+
+command! -nargs=? -complete=buffer VerticalSplitDiff wincmd o | vsplit | wincmd w | next | windo diffthis
