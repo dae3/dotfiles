@@ -1,6 +1,24 @@
 typeset -U path cdpath fpath manpath
-
 bindkey -e
+
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+
+# setup completions for things that might live in ~/.local/bin or ~/bin
+COMPLETIONS=(chezmoi blort)
+LOCALCOMP=${HOME}/.config/completion
+fpath+=${LOCALCOMP}
+if [ ! -d ${LOCALCOMP} ]; then
+  mkdir -p ${LOCALCOMP}
+  for c in ${COMPLETIONS}; do
+    which $c > /dev/null 2&>1
+    if [ $? -eq 0 ]; then
+      $c completion zsh > ${LOCALCOMP}/_$c
+    fi
+  done
+fi
 
 autoload -U compinit && compinit
 
@@ -9,9 +27,13 @@ setopt autocd
 if [ -f ~/.config/bubbles-custom.omp.json ]; then
   eval "$(oh-my-posh init zsh --config ~/.config/bubbles-custom.omp.json)"
 fi
+
 if [ -d /home/linuxbrew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
+
 eval "$(direnv hook zsh)"
 hash -d acl="$HOME/ACloud"
 hash -d labs="$HOME/labs"
+
+# vim: ft=zsh ff=unix sw=2 ts=2 ai et
