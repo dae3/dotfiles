@@ -1,0 +1,15 @@
+[user]
+	name = Daniel Everett
+{{- if hasPrefix "alc" (.chezmoi.hostname | lower )}}
+	email = daniel.everett@alcidion.com
+{{- else }}
+	email = deverett@gmail.com
+{{- end }}
+
+[alias]
+	l = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+	a = add
+	c = commit
+	s = status
+	pu = push -u origin '!git branch --show-current'
