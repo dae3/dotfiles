@@ -24,7 +24,8 @@ autoload -U compinit && compinit
 
 setopt autocd
 
-if [ -f ~/.config/bubbles-custom.omp.json ]; then
+which oh-my-posh > /dev/null
+if [[ $? -eq 0 && -f ~/.config/bubbles-custom.omp.json ]]; then
   eval "$(oh-my-posh init zsh --config ~/.config/bubbles-custom.omp.json)"
 fi
 
@@ -32,7 +33,11 @@ if [ -d /home/linuxbrew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
-eval "$(direnv hook zsh)"
+which direnv > /dev/null
+if [ $? -eq 0 ]; then
+  eval "$(direnv hook zsh)"
+fi
+
 hash -d acl="$HOME/ACloud"
 hash -d labs="$HOME/labs"
 
