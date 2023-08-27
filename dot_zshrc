@@ -24,9 +24,10 @@ autoload -U compinit && compinit
 
 setopt autocd
 
-which oh-my-posh > /dev/null
-if [[ $? -eq 0 && -f ~/.config/bubbles-custom.omp.json ]]; then
-  eval "$(oh-my-posh init zsh --config ~/.config/bubbles-custom.omp.json)"
+THEME=bubblesextra.omp.json
+which oh-my-posh > /dev/null 2>&1
+if [[ $? -eq 0 && -f ~/.config/${THEME} ]]; then
+  eval "$(oh-my-posh init zsh --config ~/.config/${THEME})"
 fi
 
 if [ -d /home/linuxbrew ]; then
@@ -40,5 +41,10 @@ fi
 
 hash -d acl="$HOME/ACloud"
 hash -d labs="$HOME/labs"
+
+# toolbox container name
+if [ -f /run/.containerenv ]; then
+  export TOOLBOXNAME=$(awk -F'"' '/^name/ { print $2 }' /run/.containerenv)
+fi
 
 # vim: ft=zsh ff=unix sw=2 ts=2 ai et
