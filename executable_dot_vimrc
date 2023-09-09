@@ -158,6 +158,9 @@ set completeopt=preview,menuone,noinsert
 
 "netrw
 nnoremap <silent> <c-n> :Lexplore<cr>
+let g:netrw_banner=0
+let g:netrw_liststyle=3 " tree
+let g:netrw_browse_split=4
 augroup netrw
   autocmd!
   autocmd filetype netrw nnoremap <silent> <buffer> <c-n> :bd!<cr>
