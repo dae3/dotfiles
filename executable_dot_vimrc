@@ -1,5 +1,3 @@
-" remember the vc version is at ~/dotfiles/.vimrc
-
 " plugin load
 set nocompatible
 filetype off
@@ -37,6 +35,7 @@ set hidden
 set autochdir
 set clipboard+=unnamed
 set splitbelow
+set splitright
 syntax on
 color OceanicNext
 nnoremap <silent> <F5> :w \| make <CR>
@@ -160,10 +159,14 @@ set completeopt=preview,menuone,noinsert
 nnoremap <silent> <c-n> :Lexplore<cr>
 let g:netrw_banner=0
 let g:netrw_liststyle=3 " tree
-let g:netrw_browse_split=4
+let g:netrw_browse_split=4 " browse like Preview
+let g:netrw_preview=1  " vertical split
+let g:netrw_alto=0
+let g:netrw_winsize=30
 augroup netrw
   autocmd!
   autocmd filetype netrw nnoremap <silent> <buffer> <c-n> :bd!<cr>
+  autocmd filetype netrw nnoremap <silent> <buffer> S <Plug>NetrwTreeSqueeze
 augroup end
 
 " font stuff
@@ -198,12 +201,6 @@ augroup END
 
 command!  -nargs=? NotesGrep cd ~/notes | Rg <args>
 
-" Powershell profile source control
-augroup psprofile
-  autocmd!
-  autocmd BufWritePost ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1 write! ~/Documents/dotfiles/Microsoft.PowerShell_profile.ps1
-augroup end
-
 " simple Terraform workflow
 augroup terraform
   autocmd!
@@ -214,24 +211,6 @@ augroup END
 
 nnoremap <leader>F :call Font_size_toggle()<CR>
 
-
-" vimrc auto reload & don't forget to commit
-augroup vimrc
-  au!
-  " au BufWritePost .vimrc source % | write! ~/dotfiles/.vimrc | tabedit ~/dotfiles/.vimrc | call fugitive#Init() | Gstatus
-  au BufWritePost .vimrc source % | write! ~/Documents/dotfiles/.vimrc
-augroup END
-
-function! VimrcVC()
-  let l:vcvimrc = '~/dotfiles/Documents/.vimrc'
-
-  let l:vcvimrcbuf = bufnr(expand(l:vcvimrc))
-  if l:vcvimrcbuf > 0
-    execute "bdelete " . l:vcvimrcbuf . " | write! " l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
-  else
-    execute "write! " . l:vcvimrc . " | edit " . l:vcvimrc . " | Gstatus"
-  endif
-endfunction
 
 " abbreviations
 
