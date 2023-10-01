@@ -6,8 +6,12 @@ then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 
+if [ -x /usr/local/go/bin/go ]; then
+  PATH="$PATH:/usr/local/go/bin"
+fi
+
 # setup completions for things that might live in ~/.local/bin or ~/bin
-COMPLETIONS=(chezmoi blort)
+COMPLETIONS=(chezmoi gh)
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
 if [ ! -d ${LOCALCOMP} ]; then
@@ -21,6 +25,13 @@ if [ ! -d ${LOCALCOMP} ]; then
 fi
 
 autoload -U compinit && compinit
+
+# aws cli completion nonsense
+# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux]
+if [[ -x /usr/local/bin/aws && -x /usr/local/bin/aws_completer ]]; then
+  autoload bashcompinit && bashcompinit
+  complete -C '/usr/local/bin/aws_completer' aws
+fi
 
 setopt autocd
 
