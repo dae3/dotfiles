@@ -216,12 +216,16 @@ nnoremap <leader>F :call Font_size_toggle()<CR>
 
 " markdown
 let g:vim_markdown_autowrite = 1
+
+let g:markdown_auto_title = 0
 " insert filename as level 1 title
 function! InsertMarkdownTitle()
-  let l:firstline = getline(1)
-  let l:title = '# ' . expand('%:t:r')
-  if match(l:firstline, l:title) == -1
-    call append(0, l:title)
+  if g:markdown_auto_title
+    let l:firstline = getline(1)
+    let l:title = '# ' . expand('%:t:r')
+    if match(l:firstline, l:title) == -1
+      call append(0, l:title)
+    endif
   endif
 endfunction
 
