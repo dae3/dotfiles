@@ -162,7 +162,7 @@ let g:netrw_liststyle=3 " tree
 let g:netrw_browse_split=4 " browse like Preview
 let g:netrw_preview=1  " vertical split
 let g:netrw_alto=0
-let g:netrw_winsize=30
+let g:netrw_winsize=80
 augroup netrw
   autocmd!
   autocmd filetype netrw nnoremap <silent> <buffer> <c-n> :bd!<cr>
@@ -215,7 +215,7 @@ nnoremap <leader>F :call Font_size_toggle()<CR>
 " abbreviations
 
 " markdown
-let g:vim_markdown_autowrite = 1
+let g:vim_markdown_autowrite = 0
 " insert filename as level 1 title
 function! InsertMarkdownTitle()
   let l:firstline = getline(1)
