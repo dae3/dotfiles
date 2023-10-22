@@ -52,6 +52,7 @@ fi
 
 hash -d acl="$HOME/ACloud"
 hash -d labs="$HOME/labs"
+hash -d projects="$HOME/projects"
 
 # toolbox container name
 if [ -f /run/.containerenv ]; then
