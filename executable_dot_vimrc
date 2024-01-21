@@ -26,6 +26,8 @@ Plug 'preservim/tagbar'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-sexp'
+Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
+Plug 'ctrlpvim/ctrlp.vim'
 call plug#end()
 filetype plugin indent on
 
