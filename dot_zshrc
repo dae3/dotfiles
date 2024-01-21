@@ -1,28 +1,32 @@
 typeset -U path cdpath fpath manpath
 bindkey -e
+setopt autocd
+
+hash -d acl="$HOME/ACloud"
+hash -d labs="$HOME/labs"
+hash -d projects="$HOME/projects"
 
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
 then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 
-if [ -x /usr/local/go/bin/go ]; then
-  PATH="$PATH:/usr/local/go/bin"
-fi
-
-# setup completions for things that might live in ~/.local/bin or ~/bin
-COMPLETIONS=(chezmoi gh)
+# setup completions for things that might exist
+COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm)
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
 if [ ! -d ${LOCALCOMP} ]; then
   mkdir -p ${LOCALCOMP}
-  for c in ${COMPLETIONS}; do
-    which $c > /dev/null 2&>1
-    if [ $? -eq 0 ]; then
-      $c completion zsh > ${LOCALCOMP}/_$c
-    fi
-  done
 fi
+for c in ${COMPLETIONS}; do
+  which $c > /dev/null 2&>1
+  if [ $? -eq 0 ]; then
+    if [ ! -f ${LOCALCOMP}/_$c ] || [ $(which $c) -nt ${LOCALCOMP}/_$c ]; then
+      echo "Setting up completion for $c"
+      ($c completion zsh > ${LOCALCOMP}/_$c) || true
+    fi
+  fi
+done
 
 autoload -U compinit && compinit
 
@@ -33,7 +37,14 @@ if [[ -x /usr/local/bin/aws && -x /usr/local/bin/aws_completer ]]; then
   complete -C '/usr/local/bin/aws_completer' aws
 fi
 
-setopt autocd
+# go completion nonsense
+which go > /dev/null 2&>1
+if [ $? -eq 0 ]; then
+  GOCOMPLETE=${HOME}/.local/bin/gocomplete
+  [ -x ${GOCOMPLETE} ] || GOBIN=${HOME}/.local/bin go install github.com/posener/complete/v2/gocomplete@v2.1.0
+  autoload bashcompinit && bashcompinit
+  complete -C ${GOCOMPLETE} go
+fi
 
 THEME=bubblesextra.omp.json
 which oh-my-posh > /dev/null 2>&1
@@ -50,13 +61,22 @@ if [ $? -eq 0 ]; then
   eval "$(direnv hook zsh)"
 fi
 
-hash -d acl="$HOME/ACloud"
-hash -d labs="$HOME/labs"
-hash -d projects="$HOME/projects"
-
 # toolbox container name
 if [ -f /run/.containerenv ]; then
   export TOOLBOXNAME=$(awk -F'"' '/^name/ { print $2 }' /run/.containerenv)
 fi
+
+# make podman impersonate docker, and smooth use from inside toolboxen
+if [ command -v podman > /dev/null 2&>1 ]; then
+  export DOCKER_HOST="unix://$(podman info -f "{{.Host.RemoteSocket.Path}}")"
+  systemctl --user enable --now podman.socket
+fi
+function podman {
+  if [ -f /run/.containerenv ]; then
+    flatpak-spawn --host podman $*
+  else
+    command podman $*
+  fi
+}
 
 # vim: ft=zsh ff=unix sw=2 ts=2 ai et
