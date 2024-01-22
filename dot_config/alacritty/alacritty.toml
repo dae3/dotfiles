@@ -1,0 +1,17 @@
+[bell]
+animation = "EaseOutExpo"
+duration = 50
+
+[font]
+size = 9
+
+[font.normal]
+family = "FiraCodeNerdFont"
+
+[[keyboard.bindings]]
+action = "CreateNewWindow"
+key = "N"
+mods = "Shift|Control"
+
+[window]
+dynamic_title = true
