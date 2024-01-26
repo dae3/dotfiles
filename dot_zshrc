@@ -1,10 +1,8 @@
-typeset -U path cdpath fpath manpath
+typeset -U path fpath manpath
 bindkey -e
 setopt autocd
 
-hash -d acl="$HOME/ACloud"
-hash -d labs="$HOME/labs"
-hash -d projects="$HOME/projects"
+cdpath=(labs projects)
 
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
 then
