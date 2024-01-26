@@ -66,17 +66,4 @@ if [ -f /run/.containerenv ]; then
   export TOOLBOXNAME=$(awk -F'"' '/^name/ { print $2 }' /run/.containerenv)
 fi
 
-# make podman impersonate docker, and smooth use from inside toolboxen
-if [ command -v podman > /dev/null 2>&1 ]; then
-  export DOCKER_HOST="unix://$(podman info -f "{{.Host.RemoteSocket.Path}}")"
-  systemctl --user enable --now podman.socket
-fi
-function podman {
-  if [ -f /run/.containerenv ]; then
-    flatpak-spawn --host podman $*
-  else
-    command podman $*
-  fi
-}
-
 # vim: ft=zsh ff=unix sw=2 ts=2 ai et
