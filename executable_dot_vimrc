@@ -28,6 +28,7 @@ Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-sexp'
 Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'github/copilot.vim'
 call plug#end()
 filetype plugin indent on
 
