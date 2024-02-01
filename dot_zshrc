@@ -35,6 +35,9 @@ if [[ -x /usr/local/bin/aws && -x /usr/local/bin/aws_completer ]]; then
   complete -C '/usr/local/bin/aws_completer' aws
 fi
 
+# gcloud completion nonsense
+[ -d /usr/share/google-cloud-sdk ] && source /usr/share/google-cloud-sdk/completion.zsh.inc
+
 # go completion nonsense
 which go > /dev/null 2>&1
 if [ $? -eq 0 ]; then
