@@ -70,4 +70,9 @@ if [ -f /run/.containerenv ]; then
   export TOOLBOXNAME=$(awk -F'"' '/^name/ { print $2 }' /run/.containerenv)
 fi
 
+# chezmoi edit shorthand
+function dotvim() {
+  chezmoi edit --apply $1
+}
+
 # vim: ft=zsh ff=unix sw=2 ts=2 ai et
