@@ -10,7 +10,7 @@ then
 fi
 
 # setup completions for things that might exist
-COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod)
+COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn)
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
 if [ ! -d ${LOCALCOMP} ]; then
