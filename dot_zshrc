@@ -27,6 +27,9 @@ for c in ${COMPLETIONS}; do
 done
 
 autoload -U compinit && compinit
+zstyle ':completion:*' menu select
+autoload predict-on
+predict-on
 
 # aws cli completion nonsense
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux]
