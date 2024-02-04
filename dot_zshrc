@@ -9,11 +9,8 @@ then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 
-# bluefin-cli managed homebrew installed things
-[[ -d ${HOME}/.local/share/bluefin-cli/.linuxbrew/bin ]] && PATH=${HOME}/.local/share/bluefin-cli/.linuxbrew/bin:${PATH}
-
 # setup completions for things that might exist
-COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn brew distrobox)
+COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn)
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
 if [ ! -d ${LOCALCOMP} ]; then
