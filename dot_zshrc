@@ -50,11 +50,7 @@ if [ $? -eq 0 ]; then
   complete -C ${GOCOMPLETE} go
 fi
 
-THEME=bubblesextra.omp.json
-which oh-my-posh > /dev/null 2>&1
-if [[ $? -eq 0 && -f ~/.config/${THEME} ]]; then
-  eval "$(oh-my-posh init zsh --config ~/.config/${THEME})"
-fi
+whence starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
 if [ -d /home/linuxbrew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
