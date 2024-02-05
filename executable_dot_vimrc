@@ -215,6 +215,10 @@ augroup terraform
   autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
 augroup END
 
+command! Tp Dispatch terraform plan -out tfplan -no-color
+command! Ta Dispatch terraform apply tfplan -no-color
+command! Tv Dispatch terraform validate -no-color
+
 nnoremap <leader>F :call Font_size_toggle()<CR>
 
 
