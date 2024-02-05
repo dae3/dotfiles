@@ -2,7 +2,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
-$kubernetes$aws$azure
+$kubernetes$aws$azure$gcloud
 $directory$git_status$jobs$character
 """
 right_format = '$status$cmd_duration'
@@ -24,3 +24,8 @@ contexts = [
   { context_pattern = "dev.local.cluster.k8s", style = "green", symbol = "💔 " },
 ]
 disabled = true
+
+[gcloud]
+format = '$symbol$project$region'
+symbol = '🌥️'
+style = 'bold blue'
