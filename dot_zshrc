@@ -1,6 +1,10 @@
 typeset -U path fpath manpath
-bindkey -e
+
+bindkey -v
+bindkey ^X^K vi-kill-eol
+
 setopt autocd
+setopt interactive_comments
 
 cdpath=(labs projects)
 [[ -d ${HOME}/.config/zsh ]] && fpath+=${HOME}/.config/zsh
@@ -12,7 +16,7 @@ fi
 
 autoload -Uz promptinit
 promptinit
-prompt daniel /dev/null 2>&1
+prompt daniel
 
 autoload -U compinit && compinit
 zstyle ':completion:*' completer _extensions _complete # _approximate
