@@ -1,24 +1,29 @@
-typeset -U path fpath manpath
-
+# key bindings
 bindkey -v
 bindkey ^X^K vi-kill-eol
 
+# options and settings
 setopt autocd
 setopt interactive_comments
 
+typeset -U path fpath manpath
 cdpath=(labs projects)
+
+# path and path-y things
 [[ -d ${HOME}/.config/zsh ]] && fpath+=${HOME}/.config/zsh
 
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+if [[ -d "${HOME}/.local/bin" ]] && ! [[ "$PATH" =~ "$HOME/.local/bin" ]]
 then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+    PATH="$HOME/.local/bin:$PATH"
 fi
 
+# prompt theme
 autoload -Uz promptinit
 promptinit
 prompt daniel
 
-# setup completions for things that might exist
+# completion
+## setup completions for things that might exist as static binaries
 COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func)
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
@@ -35,6 +40,7 @@ for c in ${COMPLETIONS}; do
   fi
 done
 
+## completion shinyness
 autoload -U compinit && compinit
 zstyle ':completion:*' completer _extensions _complete # _approximate
 zstyle ':completion:*' menu select
@@ -45,41 +51,42 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 autoload predict-on
 predict-on
 
-# aws cli completion nonsense
-# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux]
-if [[ -x /usr/local/bin/aws && -x /usr/local/bin/aws_completer ]]; then
-  autoload bashcompinit && bashcompinit
+## annoying things with nonstandard completion setup, ie not
+## via package manager or `$THING completion zsh`
+### aws cli
+### https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux]
+if command -v aws_completer > /dev/null 2>&1 ; then
   complete -C '/usr/local/bin/aws_completer' aws
 fi
 
-# gcloud completion nonsense
+### gcloud
+### TODO: make this install location independent
 [ -d /usr/share/google-cloud-sdk ] && source /usr/share/google-cloud-sdk/completion.zsh.inc
 
-# go completion nonsense
-which go > /dev/null 2>&1
-if [ $? -eq 0 ]; then
+### go
+if command -v go > /dev/null 2>&1
+then
   GOCOMPLETE=${HOME}/.local/bin/gocomplete
   [ -x ${GOCOMPLETE} ] || GOBIN=${HOME}/.local/bin go install github.com/posener/complete/v2/gocomplete@v2.1.0
-  autoload bashcompinit && bashcompinit
   complete -C ${GOCOMPLETE} go
 fi
 
+autoload bashcompinit && bashcompinit
 
+# hooks for things that might exist
+## homebrew
 if [ -d /home/linuxbrew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+## direnv
 which direnv > /dev/null 2>&1
 if [ $? -eq 0 ]; then
   eval "$(direnv hook zsh)"
 fi
 
-# toolbox container name
-if [ -f /run/.containerenv ]; then
-  export TOOLBOXNAME=$(awk -F'"' '/^name/ { print $2 }' /run/.containerenv)
-fi
-
-# chezmoi edit shorthand
+# functions
+## chezmoi edit shorthand
 function dotvim() {
   chezmoi edit --apply $1
 }
