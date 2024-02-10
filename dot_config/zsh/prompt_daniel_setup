@@ -4,6 +4,20 @@ daniel_theme_precmd() {
   vcs_info
 }
 
+# make SHLVL "correct" even within tmux
+function daniel_theme_shlvl {
+  if [[ -n ${TMUX} ]]; then
+    adj_shlvl=$(( ${SHLVL} - 1 ))
+  else
+    adj_shlvl=${SHLVL}
+  fi
+
+  if [[ $adj_shlvl -gt 1 ]]; then
+    # down arrow
+    print -n "%F{$on_purple}$adj_shlvl%{\Uf0045%G%}%f"
+  fi
+}
+
 add-zsh-hook precmd daniel_theme_precmd
 
 # stolen from OceanicNext theme
@@ -11,9 +25,11 @@ on_cyan='#62b3b2'
 on_orange='#f99157'
 on_red='#ec5f67'
 on_purple='#c594c5'
-# job count, username@first component of hostname last 2 of pwd
-PROMPT="%F{$on_purple}%(1j.[%j] .)%f%F{$on_cyan}%n@%m%f %F{$on_orange}%2~%f%  %B%#%b "
-RPROMPT='%(0?..%K{$on_red}$?%k) ${vcs_info_msg_0_}'
+
+# SHLVL, job count, username@first component of hostname last 2 of pwd
+PROMPT='$(daniel_theme_shlvl)%F{$on_purple}%(1j.[%j].)%f%F{$on_cyan}%n@%m%f %F{$on_orange}%2~%f%  %B%#%b '
+# last nonzero exit, git info
+RPROMPT='%(1?..%K{$on_red}$?%k) ${vcs_info_msg_0_}'
 
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git
