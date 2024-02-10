@@ -3,11 +3,26 @@ bindkey -e
 setopt autocd
 
 cdpath=(labs projects)
+[[ -d ${HOME}/.config/zsh ]] && fpath+=${HOME}/.config/zsh
 
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
 then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
+
+autoload -Uz promptinit
+promptinit
+prompt daniel /dev/null 2>&1
+
+autoload -U compinit && compinit
+zstyle ':completion:*' completer _extensions _complete # _approximate
+zstyle ':completion:*' menu select
+zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+autoload predict-on
+predict-on
 
 # setup completions for things that might exist
 COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func)
@@ -25,11 +40,6 @@ for c in ${COMPLETIONS}; do
     fi
   fi
 done
-
-autoload -U compinit && compinit
-zstyle ':completion:*' menu select
-autoload predict-on
-predict-on
 
 # aws cli completion nonsense
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux]
@@ -50,7 +60,6 @@ if [ $? -eq 0 ]; then
   complete -C ${GOCOMPLETE} go
 fi
 
-whence starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
 if [ -d /home/linuxbrew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

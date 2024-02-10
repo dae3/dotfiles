@@ -1,0 +1,24 @@
+prompt_opts=(bang percent subst)
+
+daniel_theme_precmd() {
+  vcs_info
+}
+
+add-zsh-hook precmd daniel_theme_precmd
+
+# stolen from OceanicNext theme
+on_cyan='#62b3b2'
+on_orange='#f99157'
+on_red='#ec5f67'
+on_purple='#c594c5'
+# job count, username@first component of hostname last 2 of pwd
+PROMPT="%F{$on_purple}%(1j.[%j] .)%f%F{$on_cyan}%n@%m%f %F{$on_orange}%2~%f%  %B%#%b "
+RPROMPT='${vcs_info_msg_0_}'
+
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' formats "%F{$on_cyan}%b%f %F{$on_red}%c%u%f"
+zstyle ':vcs_info:git:*' actionformats "%a %F{$on_cyan}%b%f %F{$on_red}%c%u%f"
+
+# vim: ft=zsh
