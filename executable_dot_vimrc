@@ -1,8 +1,6 @@
-" plugin load
+" vim-plug
 set nocompatible
 filetype off
-
-set guioptions=MiRe
 
 call plug#begin('~/.vim/plugged')
 
@@ -16,9 +14,7 @@ Plug 'tpope/vim-surround'
 Plug 'aklt/plantuml-syntax'
 Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
-Plug 'in3d/vim-raml'
 Plug 'sheerun/vim-polyglot'
-Plug 'thaerkh/vim-indentguides'
 Plug 'tpope/vim-fugitive'
 Plug 'dense-analysis/ale'
 Plug 'junegunn/fzf.vim'
@@ -39,26 +35,55 @@ call plug#end()
 filetype plugin indent on
 
 " misc settings
+syntax on
+color oceanic_material
+set guioptions=MiRe " turn off gui chrome
 set title
 set hidden
 set autochdir
 set clipboard+=unnamed
-set splitbelow
-set splitright
-syntax on
-color OceanicNext
-nnoremap <silent> <F5> :w \| make <CR>
-set tabstop=4
-set shiftwidth=2
-set softtabstop=2
-set expandtab
+set splitbelow splitright
+set tabstop=4 shiftwidth=2 softtabstop=2 expandtab
 set ignorecase
 set encoding=utf-8
-set number
 set relativenumber
-nnoremap <silent> <localleader>n :set relativenumber!<cr>
+set foldlevel=99
+set spellsuggest=fast
+set shortmess+=c
+set belloff+=ctrlg
+set background=dark
+set completeopt=preview,menuone,noinsert
+set diffopt+=,vertical
+
 let mapleader="\\"
 let maplocalleader="\\"
+
+let g:ctrlp_cmd='CtrlPBuffer'
+
+command! VimgrepUnderCursor vimgrep <cword> % | copen
+command! -nargs=? -complete=buffer VerticalSplitDiff wincmd o | vsplit | wincmd w | next | windo diffthis
+command! GLucky :call netrw#BrowseX("https://google.com/search?q=" . expand('<cword>'), "0")
+command! -bar -nargs=1 Gcap G commit -m <args> | G push
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+
+" diff buffer with saved file
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+command! DiffSaved call s:DiffWithSaved()
+
+" insert date in useful format for markdown headings
+function! InsertDate()
+  let l:date = strftime("%Y%m%d", localtime())
+  execute 'normal! A' . l:date
+endfunction
+
+nnoremap <silent> <localleader>n :set relativenumber!<cr>
+nnoremap <silent> <F5> :w \| make <CR>
 nnoremap - ddp
 nnoremap _ dd2kp
 nnoremap <leader>wd :windo diffthis<cr>
@@ -70,13 +95,13 @@ inoremap <C-s> <esc>:w<CR>
 inoremap <C-s><C-s> <esc>:w<CR>i
 nnoremap <C-s> :w<CR>
 inoremap jk <esc>
-set foldlevel=99
-set spellsuggest=fast
-set shortmess+=c
-set belloff+=ctrlg
-let g:python3_host_prog='c:/Python37/python.exe'
+nnoremap <C-g>a :Gwrite<CR>
+" turn off search highlight with <CR>
+nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
-" autokparens
+nnoremap <silent> B :GLucky<cr>
+
+" autoparens
 inoremap <expr> { AutoParen('{','}')
 inoremap <expr> } AutoParen('}')
 inoremap <expr> ( AutoParen('(',')')
@@ -128,7 +153,8 @@ let g:ale_linters = {
       \  'tf' : ['terraform-lsp'],
       \  'yaml' : [ 'yaml-language-server' ],
       \  'md': [ 'markdownlint','alex' ],
-      \  'go': [ 'gopls' ]
+      \  'go': [ 'gopls' ],
+      \  'clojure': [ 'clojure-lsp' ],
       \ }
 let g:ale_sign_error = "❌"
 let g:ale_sign_warning = "⚠"
@@ -138,16 +164,6 @@ let g:ale_virtualtext_cursor=1
 let g:ale_completion_enabled=1
 let g:ale_fix_on_save=1
 let g:ale_set_quickfix=1
-let g:ale_yaml_ls_config = {
-      \ "yaml": {
-        \ "schemas":{
-        \ "https://github.com/yannh/kubernetes-json-schema/raw/master/v1.21.0-standalone/all.json":"*"
-        \ },
-        \ "trace":{
-          \ "server":"verbose"
-        \ }
-        \ }
-      \}
 
 nnoremap <silent> ]c :ALENextWrap<cr>
 nnoremap <silent> [c :ALEPreviousWrap<cr>
@@ -159,10 +175,6 @@ augroup CloseLoclistWindowGroup
   autocmd!
   autocmd QuitPre * if empty(&buftype) | lclose | endif
 augroup END
-
-
-" completion
-set completeopt=preview,menuone,noinsert
 
 "netrw
 nnoremap <silent> <c-n> :Lexplore<cr>
@@ -178,58 +190,21 @@ augroup netrw
   autocmd filetype netrw nnoremap <silent> <buffer> S <Plug>NetrwTreeSqueeze
 augroup end
 
-" font stuff
-let g:gfsizebig=14
-let g:gfsizesmall=9
-let g:gfsize=g:gfsizebig
-let g:gfname='Fira Code Retina'
-function! Font_size_toggle()
-  if g:gfsize == g:gfsizebig
-    let g:gfsize = g:gfsizesmall
-  else
-    let g:gfsize = g:gfsizebig
-  endif
-
-  let &guifont=g:gfname . ':h' . g:gfsize
-endfunction
-
-" fugitive
-nnoremap <C-g>a :Gwrite<CR>
-nnoremap <C-g>c :Gcommit<CR>
-
-" json
-au! BufRead,BufNewFile *.json set filetype=json
-
-augroup json_autocmd
-  autocmd!
-  autocmd FileType json set autoindent
-  autocmd FileType json set formatoptions=tcq2l
-  autocmd FileType json set textwidth=78 shiftwidth=2
-  autocmd FileType json set foldmethod=syntax
-augroup END
-
-command!  -nargs=? NotesGrep cd ~/notes | Rg <args>
-
-" simple Terraform workflow
+" Terraform
 augroup terraform
   autocmd!
-  autocmd FileType terraform setlocal makeprg=terraform\ validate\ -no-color
-  "autocmd FileType terraform autocmd BufWritePost <buffer> :lmake
+  autocmd FileType terraform setlocal compiler=terraform\ plan\ -out\ tfplan\ -no-color
+  autocmd BufWritePre !terraform fmt %
+  " TODO does this work?
   autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
 augroup END
 
-command! Tp Dispatch terraform plan -out tfplan -no-color
 command! Ta Dispatch terraform apply tfplan -no-color
-command! Tv Dispatch terraform validate -no-color
-
-nnoremap <leader>F :call Font_size_toggle()<CR>
-
 
 " abbreviations
 
 " markdown
 let g:vim_markdown_autowrite = 1
-
 let g:markdown_auto_title = 0
 " insert filename as level 1 title
 function! InsertMarkdownTitle()
@@ -267,165 +242,9 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_skip_empty_sections = 1
 let g:airline_powerline_fonts = 1
 let g:airline_section_z=""
-
-" tab labels
-function! TabLabels()
-  let label = v:lnum . ' '
-  let aidx = v:lnum - 1
-
-  if exists(g:tablab[0] && len(g:tablab) == 0)
-    echo 'YAY'
-    let label .= g:tablab[aidx]
-  else
-    let bl = tabpagebuflist(v:lnum)
-    let label .= bufname(bl[tabpagewinnr(v:lnum) - 1])
-  endif
-
-  return label
-endfunction
-
-" set guitablabel=%{TabLabels()}
-command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
-" nnoremap <C-f> Find
-
-
-" turn off search highlight with <CR>
-nnoremap <silent> <CR> :nohlsearch<CR><CR>
-
-" quick Google search
-command! GLucky :call netrw#BrowseX("https://google.com/search?q=" . expand('<cword>'), "0")
-nnoremap <silent> B :GLucky<cr>
-
-" diff
-set diffopt+=,vertical
-
-" diff buffer with saved file
-function! s:DiffWithSaved()
-  let filetype=&ft
-  diffthis
-  vnew | r # | normal! 1Gdd
-  diffthis
-  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
-endfunction
-command! DiffSaved call s:DiffWithSaved()
-
-" insert date in useful format for markdown headings
-function! InsertDate()
-  let l:date = strftime("%Y%m%d", localtime())
-  execute 'normal! A' . l:date
-endfunction
-
-inoremap <localleader>mdd <ESC>:call InsertDate()<CR>
-
 " selective cursorline
 augroup cln
   autocmd!
   autocmd WinEnter * set cursorline
   autocmd WinLeave * set nocursorline
 augroup end
-
-" Jira jump
-function! JiraJump()
-  let l:ticket =  'https://integratedcareportfolio.atlassian.net/browse/NCC-' . expand('<cword>')
-  call openbrowser#open(l:ticket)
-endfunction
-
-
-" JSON outliner
-function! JsonOutline(srcbuf)
-  let l:lines = getbufline(a:srcbuf,1,'$')
-  let l:data = []
-  let l:lnum = 0
-  let l:outlnum = 1
-  let l:indent = 0
-
-  " create or find and prepare our scratch buffer
-  if exists("g:jsonoutlinemap")
-    if exists("g:jsonoutlinemap[a:srcbuf]")
-      let l:scrbuf = g:jsonoutlinemap[a:srcbuf]
-    else
-      let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
-      let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
-    endif
-  else
-    let l:scrbuf = CreateJsonOutlineScratch(a:srcbuf)
-    let g:jsonoutlinemap = {}
-    let g:jsonoutlinemap[a:srcbuf] = l:scrbuf
-  endif
-  let l:scrwin = bufwinnr(l:scrbuf)
-  execute l:scrwin . 'wincmd w | set ma | let b:srcbuf =' . a:srcbuf . ' | normal! ggdG'
-
-  " process the parent buffer
-  while l:lnum < len(l:lines)
-    " only add lines containing a key to the list
-    let l:match = matchlist(l:lines[l:lnum], '^\s*"\(\w\+\)"')
-    if l:match != []
-      let l:data = add(l:data, { 'key' : l:match[1], 'iskey' : 1, 'lnum' : l:lnum+1, 'indent' : l:indent })
-      call append(l:outlnum, FormatOneLine(l:data[l:lnum]))
-      let l:outlnum += 1
-    else
-      let l:data = add(l:data, { 'key' : '', 'iskey' : 0, 'lnum' : l:lnum+1,  'indent' : l:indent })
-    endif
-
-    " increase indent on { or [, decrease on } or ]
-    " this will fail in non-simple cases like escaped brackets
-    if l:lines[l:lnum] =~ '{\|['
-      let l:indent += 1
-    elseif l:lines[l:lnum] =~  '}\|]'
-      let l:indent -= 1
-    endif
-
-    let l:lnum += 1
-  endwhile
-
-  setl nomodifiable
-  nnoremap <silent> <buffer> <cr> :call JPJump()<cr>
-endfunction
-
-command! JsonOutline call JsonOutline(bufnr('%'))
-
-function! JPJump()
-  let l:line = getline('.')
-  let l:data = matchlist(l:line, '^\s*\(\d\+\) \.* \(\w\+\)')
-  execute bufwinnr(b:srcbuf) . 'wincmd w'
-  execute 'normal! ' . l:data[1] . 'G'
-endfunction
-
-function! FormatOneLine(line)
-  call assert_true(type(a:line) == v:t_dict)
-  if a:line['iskey'] == 1
-    let l:ret = printf("%5d %s %s", a:line['lnum'], repeat('.', a:line['indent']), a:line['key'])
-  else
-    let l:ret = ""
-  endif
-  return l:ret
-endfunction
-
-function! CreateJsonOutlineScratch(srcbuf)
-  40 vsplit __JSON Outline__
-  noswapfile hide enew
-  setlocal buftype=nofile
-  setlocal bufhidden=hide
-  setlocal nospell noswapfile nonumber norelativenumber
-  let b:scrbuf = a:srcbuf
-  autocmd! BufUnload <buffer> call DeleteJsonOutlineScratch()
-  return bufnr('%')
-endfunction
-
-function! DeleteJsonOutlineScratch()
-  " Delete this buffer from g:jsonoutlinemap
-
-  " Finds the parent buffer from the buffer-local variable of the autocommand's
-  " target buffer. NB: expand('<abuf>') returns String but getbufvar requires
-  " a Number
-  let l:outlinebuf = str2nr(expand('<abuf>'))
-  let l:srcbuf = getbufvar(l:outlinebuf, 'srcbuf')
-  unlet g:jsonoutlinemap[l:srcbuf]
-
-  " clean up the autocommand
-  execute "au! BufUnload <buffer=" . l:outlinebuf . ">"
-endfunction
-
-command! VimgrepUnderCursor vimgrep <cword> % | copen
-
-command! -nargs=? -complete=buffer VerticalSplitDiff wincmd o | vsplit | wincmd w | next | windo diffthis
