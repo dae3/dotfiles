@@ -18,6 +18,29 @@ function daniel_theme_shlvl {
   fi
 }
 
+# shiny exit status
+function daniel_theme_exitstatus {
+  case $? in
+  0)
+    col="$on_green"
+    ch="\Uf058"
+
+    ;;
+  1)
+    col="$on_yellow"
+    ch="\Uf057"
+
+    ;;
+
+  *)
+    col="$on_red"
+    ch="\Uf057 $?"
+
+    ;;
+  esac
+  print -n "%F{$col}$ch%f"
+}
+
 add-zsh-hook precmd daniel_theme_precmd
 
 # stolen from OceanicNext theme
@@ -25,11 +48,13 @@ on_cyan='#62b3b2'
 on_orange='#f99157'
 on_red='#ec5f67'
 on_purple='#c594c5'
+on_yellow='#fac863'
+on_green='#99c794'
 
 # SHLVL, job count, username@first component of hostname last 2 of pwd
 PROMPT='$(daniel_theme_shlvl)%F{$on_purple}%(1j.[%j].)%f%F{$on_cyan}%n@%m%f %F{$on_orange}%2~%f%  %B%#%b '
-# last nonzero exit, git info
-RPROMPT='%(1?..%K{$on_red}$?%k) ${vcs_info_msg_0_}'
+# exit status, git info
+RPROMPT='$(daniel_theme_exitstatus) ${vcs_info_msg_0_}'
 
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git
