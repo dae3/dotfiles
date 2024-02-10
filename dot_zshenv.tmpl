@@ -1,5 +1,9 @@
 alias k=kubectl
+alias czs='chezmoi status'
+alias czg='chezmoi git'
+
 export EDITOR=vim
+
 {{- if eq .chezmoi.hostname "fedora" }}
 export RESTIC_REPOSITORY=s3:s3.ap-southeast-2.amazonaws.com/gybofkscjptzvgfcdyiayyxhkaiqzmbv
 {{- end }}
