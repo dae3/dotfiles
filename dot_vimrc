@@ -59,6 +59,7 @@ let mapleader="\\"
 let maplocalleader="\\"
 
 let g:ctrlp_cmd='CtrlPBuffer'
+let g:terraform_fmt_on_save=1
 
 command! VimgrepUnderCursor vimgrep <cword> % | copen
 command! -nargs=? -complete=buffer VerticalSplitDiff wincmd o | vsplit | wincmd w | next | windo diffthis
@@ -194,7 +195,6 @@ augroup end
 augroup terraform
   autocmd!
   autocmd FileType terraform setlocal compiler=terraform\ plan\ -out\ tfplan\ -no-color
-  autocmd BufWritePre !terraform fmt %
   " TODO does this work?
   autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
 augroup END
@@ -248,3 +248,8 @@ augroup cln
   autocmd WinEnter * set cursorline
   autocmd WinLeave * set nocursorline
 augroup end
+
+" disable gutentags if there's no ctags because it explodes badly
+if ! executable('ctags')
+  let g:gutentags_enabled=0
+endif
