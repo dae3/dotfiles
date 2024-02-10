@@ -13,7 +13,7 @@ on_red='#ec5f67'
 on_purple='#c594c5'
 # job count, username@first component of hostname last 2 of pwd
 PROMPT="%F{$on_purple}%(1j.[%j] .)%f%F{$on_cyan}%n@%m%f %F{$on_orange}%2~%f%  %B%#%b "
-RPROMPT='${vcs_info_msg_0_}'
+RPROMPT='%(0?..%K{$on_red}$?%k) ${vcs_info_msg_0_}'
 
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git

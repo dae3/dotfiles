@@ -18,16 +18,6 @@ autoload -Uz promptinit
 promptinit
 prompt daniel
 
-autoload -U compinit && compinit
-zstyle ':completion:*' completer _extensions _complete # _approximate
-zstyle ':completion:*' menu select
-zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
-zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
-zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-autoload predict-on
-predict-on
-
 # setup completions for things that might exist
 COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func)
 LOCALCOMP=${HOME}/.config/completion
@@ -44,6 +34,16 @@ for c in ${COMPLETIONS}; do
     fi
   fi
 done
+
+autoload -U compinit && compinit
+zstyle ':completion:*' completer _extensions _complete # _approximate
+zstyle ':completion:*' menu select
+zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+autoload predict-on
+predict-on
 
 # aws cli completion nonsense
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux]
