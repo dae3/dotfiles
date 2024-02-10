@@ -8,8 +8,8 @@ command -v dconf >/dev/null 2>&1 || exit 0
 # Template dconf settings for machine-specific values
 TEMPDCONF=$(mktemp)
 
-# Gnome prompt profile name
-sed -e "s/_GNOME_PROMPT_PROFILE_/$(dconf list /org/gnome/Prompt/Profiles/ | sed 's#/$##')/" < {{ joinPath .chezmoi.sourceDir "dconf.ini" | quote }} > ${TEMPDCONF}
+# Use first Gnome prompt profile
+sed -e "s/_GNOME_PROMPT_PROFILE_/$(dconf list /org/gnome/Prompt/Profiles/ | sed 's#/$##' | head -1)/" < {{ joinPath .chezmoi.sourceDir "dconf.ini" | quote }} > ${TEMPDCONF}
 
 dconf load / < ${TEMPDCONF}
 rm -f ${TEMPDCONF}
