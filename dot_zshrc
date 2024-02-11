@@ -51,11 +51,13 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 autoload predict-on
 predict-on
 
+
 ## annoying things with nonstandard completion setup, ie not
 ## via package manager or `$THING completion zsh`
 ### aws cli
 ### https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux]
 if command -v aws_completer > /dev/null 2>&1 ; then
+  autoload bashcompinit && bashcompinit
   complete -C '/usr/local/bin/aws_completer' aws
 fi
 
@@ -70,8 +72,6 @@ then
   [ -x ${GOCOMPLETE} ] || GOBIN=${HOME}/.local/bin go install github.com/posener/complete/v2/gocomplete@v2.1.0
   complete -C ${GOCOMPLETE} go
 fi
-
-autoload bashcompinit && bashcompinit
 
 # hooks for things that might exist
 ## homebrew
