@@ -23,8 +23,8 @@ promptinit
 prompt daniel
 
 # completion
-## setup completions for things that might exist as static binaries
-COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func)
+# setup completions for things that might exist
+COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func https http)
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
 if [ ! -d ${LOCALCOMP} ]; then
