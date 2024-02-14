@@ -194,12 +194,13 @@ augroup end
 " Terraform
 augroup terraform
   autocmd!
-  autocmd FileType terraform setlocal compiler=terraform\ plan\ -out\ tfplan\ -no-color
   " TODO does this work?
   autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
 augroup END
 
 command! Ta Dispatch terraform apply tfplan -no-color
+command! Tv Dispatch terraform validate -no-color
+command! Tp Dispatch terraform apply -out tfplan -no-color
 
 " abbreviations
 
