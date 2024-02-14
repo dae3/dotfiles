@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 #!/bin/bash
 
 command -v dconf >/dev/null 2>&1 || exit 0
@@ -13,3 +14,4 @@ sed -e "s/_GNOME_PROMPT_PROFILE_/$(dconf list /org/gnome/Prompt/Profiles/ | sed 
 
 dconf load / < ${TEMPDCONF}
 rm -f ${TEMPDCONF}
+{{- end -}}

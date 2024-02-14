@@ -1,2 +1,8 @@
 tags
-\dconf.ini
+
+# os-specific stuff
+{{- if eq .chezmoi.os "windows" }}
+.zshrc
+{{ else }}
+Documents
+{{ end }}
