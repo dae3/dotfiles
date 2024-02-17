@@ -6,3 +6,9 @@ tags
 {{ else }}
 Documents
 {{ end }}
+
+# work-specific stuff
+{{- if hasPrefix "alc" (.chezmoi.hostname | lower ) }}
+{{- else }}
+.config/zsh/stbmssh
+{{- end }}
