@@ -1,0 +1,9 @@
+[wsl2]
+pageReporting=true
+
+[interop]
+enabled=false
+appendWindowsPath=false
+
+
+# vim: ft=ini

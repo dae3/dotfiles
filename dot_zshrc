@@ -21,8 +21,8 @@ promptinit
 prompt daniel
 
 # completion
-## setup completions for things that might exist as static binaries
-COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func)
+# setup completions for things that might exist
+COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func https http)
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
 if [ ! -d ${LOCALCOMP} ]; then
@@ -56,17 +56,18 @@ zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
 zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
 zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-#zstyle ':predict' toggle true
 autoload -U predict-on && predict-on
 zle -N predict-off
+autoload predict-on
+predict-on
+autoload bashcompinit && bashcompinit
 
 ## annoying things with nonstandard completion setup, ie not
 ## via package manager or `$THING completion zsh`
 ### aws cli
 ### https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-linux]
 if command -v aws_completer > /dev/null 2>&1 ; then
-  autoload bashcompinit && bashcompinit
-  complete -C '/usr/local/bin/aws_completer' aws
+  complete -C $(command -v aws_completer) aws
 fi
 
 ### gcloud

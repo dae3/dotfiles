@@ -1,2 +1,14 @@
 tags
-\dconf.ini
+
+# os-specific stuff
+{{- if eq .chezmoi.os "windows" }}
+.zshrc
+{{ else }}
+Documents
+{{ end }}
+
+# work-specific stuff
+{{- if hasPrefix "alc" (.chezmoi.hostname | lower ) }}
+{{- else }}
+.config/zsh/stbmssh
+{{- end }}
