@@ -31,6 +31,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'tpope/vim-repeat'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'rhysd/vim-lsp-ale'
 call plug#end()
 filetype plugin indent on
 
@@ -157,7 +159,6 @@ let g:ale_linters = {
       \  'yaml' : [ 'yaml-language-server' ],
       \  'md': [ 'markdownlint','alex' ],
       \  'go': [ 'gopls' ],
-      \  'clojure': [ 'clojure-lsp' ],
       \ }
 let g:ale_sign_error = "❌"
 let g:ale_sign_warning = "⚠"
@@ -167,6 +168,14 @@ let g:ale_virtualtext_cursor=1
 let g:ale_completion_enabled=1
 let g:ale_fix_on_save=1
 let g:ale_set_quickfix=1
+let g:ale_disable_lsp=0
+
+" clojure-lsp doesn't work directly with ale, use vim-lsp instead
+au User lsp_setup call lsp#register_server({
+      \ 'name': 'clojure-lsp',
+      \ 'cmd': ['clojure-lsp'],
+      \ 'allowlist': ['clojure'],
+      \ })
 
 nnoremap <silent> ]c :ALENextWrap<cr>
 nnoremap <silent> [c :ALEPreviousWrap<cr>
@@ -196,12 +205,13 @@ augroup end
 " Terraform
 augroup terraform
   autocmd!
-  autocmd FileType terraform setlocal compiler=terraform\ plan\ -out\ tfplan\ -no-color
   " TODO does this work?
   autocmd FileType terraform setlocal errorformat="Error\ loading\ files\ Error\ parsing %f:\ At\ %l:%c:\ %m"
 augroup END
 
 command! Ta Dispatch terraform apply tfplan -no-color
+command! Tv Dispatch terraform validate -no-color
+command! Tp Dispatch terraform apply -out tfplan -no-color
 
 " abbreviations
 

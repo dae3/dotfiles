@@ -1,0 +1,32 @@
+# simple wrapper around using az network bastion ssh to
+# connect to STHFT BetterMeds nodes
+
+local node=$1
+
+if [[ -z $node ]] || [[ $node -lt 1 ]] || [[ $node -gt 2 ]]
+then
+  print "Usage: stbmssh {1|2} <path-to-key>"
+  return 1
+fi
+
+local key=${2-~/.ssh/sthft-epma-prod}
+if [[ ! -f $key ]]
+then
+  print "No SSH key found at $key."
+  return 1
+fi
+
+account=$(az account list -o tsv --query '[? isDefault].id' 2>/dev/null)
+local ukalccloud="402cbda8-4a37-4a55-82cb-200b7236d454"
+if [[ $account != $ukalccloud ]]
+then
+  print "Not logged in to UK Alcidion Cloud subscription, taking you to the login page..."
+  az login >/dev/null
+  az account set -s $ukalccloud > /dev/null 2>&1
+fi
+
+az network bastion ssh -g alc-cloud-rg-bastion -n alc-cloud-bastion --auth-type ssh-key --username alcidion --ssh-key $key --target-resource-id /subscriptions/402cbda8-4a37-4a55-82cb-200b7236d454/resourceGroups/alc-cloud-rg-epma-sthft/providers/Microsoft.Compute/virtualMachines/uk-sthft-p$node
+
+
+
+# vim: ft=zsh
