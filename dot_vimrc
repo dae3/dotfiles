@@ -36,8 +36,9 @@ filetype plugin indent on
 
 " misc settings
 syntax on
-color oceanic_material
+color OceanicNext
 set guioptions=MiRe " turn off gui chrome
+let &guifont="FiraMono Nerd Font:h16"
 set title
 set hidden
 set autochdir
@@ -47,6 +48,7 @@ set tabstop=4 shiftwidth=2 softtabstop=2 expandtab
 set ignorecase
 set encoding=utf-8
 set relativenumber
+set number
 set foldlevel=99
 set spellsuggest=fast
 set shortmess+=c
