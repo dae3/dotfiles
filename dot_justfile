@@ -1,7 +1,9 @@
 import "/usr/share/ublue-os/justfile"
 
+# devpod up --recreate in cwd
 dpu:
   devpod-cli up {{invocation_directory()}} --recreate
 
+# assemble personal distroboxes
 boxen:
   distrobox assemble create --replace --file ~/.config/distrobox.ini
