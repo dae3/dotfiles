@@ -1,6 +1,4 @@
 # key bindings
-bindkey -v
-bindkey ^X^K vi-kill-eol
 
 # options and settings
 setopt autocd
@@ -24,7 +22,7 @@ prompt daniel
 
 # completion
 # setup completions for things that might exist
-COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func https http)
+COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod kn func https http dlv)
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
 if [ ! -d ${LOCALCOMP} ]; then
@@ -42,12 +40,24 @@ done
 
 ## completion shinyness
 autoload -U compinit && compinit
-zstyle ':completion:*' completer _extensions _complete # _approximate
+# don't try the fuzzier completers until second attempt
+zstyle -e ':completion:*' completer '
+if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]]; then
+  _last_try="$HISTNO$BUFFER$CURSOR"
+  reply=(_complete _match _prefix)
+else
+  reply=(_ignored _correct _approximate)
+  fi'
 zstyle ':completion:*' menu select
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+zstyle ':completion:*:correct:::' max-errors 2 not-numeric
 zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
 zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
 zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+autoload -U predict-on && predict-on
+zle -N predict-off
 autoload predict-on
 predict-on
 autoload bashcompinit && bashcompinit
@@ -71,6 +81,15 @@ then
   [ -x ${GOCOMPLETE} ] || GOBIN=${HOME}/.local/bin go install github.com/posener/complete/v2/gocomplete@v2.1.0
   complete -C ${GOCOMPLETE} go
 fi
+
+## keybindings
+bindkey -v
+bindkey ^X^K vi-kill-eol
+function predict-toggle() {
+  print $ZLE_STATE
+}
+zle -N predict-toggle predict-toggle
+bindkey '^T' predict-toggle
 
 # hooks for things that might exist
 ## homebrew
