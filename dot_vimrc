@@ -265,3 +265,6 @@ augroup end
 if ! executable('ctags')
   let g:gutentags_enabled=0
 endif
+
+" autosave
+command! -nargs=0 AutoSaveOn au! CursorHold,CursorHoldI <buffer> silent! write
