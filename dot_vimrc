@@ -211,7 +211,7 @@ augroup END
 
 command! Ta Dispatch terraform apply tfplan -no-color
 command! Tv Dispatch terraform validate -no-color
-command! Tp Dispatch terraform apply -out tfplan -no-color
+command! Tp Dispatch terraform plan -out tfplan -no-color
 
 " abbreviations
 
