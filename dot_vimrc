@@ -268,3 +268,9 @@ endif
 
 " autosave
 command! -nargs=0 AutoSaveOn au! CursorHold,CursorHoldI <buffer> silent! write
+
+" clojure{script}
+augroup clj
+  au!
+  au FileType clojure setlocal omnifunc=fireplace#omnicomplete
+augroup END
