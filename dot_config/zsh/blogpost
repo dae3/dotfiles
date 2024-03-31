@@ -1,0 +1,29 @@
+# Create a new blog post in Jekyll format
+
+POSTHOME=${HOME}/blog-content/_posts
+
+if [ ! -d ${POSTHOME} ]; then
+  echo "${POSTHOME} doesn't exist - are you on the right machine?"
+  return 1
+fi
+
+if [ -z $1 ]; then
+  echo "No post name provided"
+  return 1
+fi
+
+# proper url-encoding would be nice...
+FILENAME="${POSTHOME}/$(date +"%Y-%m-%d")-${1// /-}.md"
+
+if [ ! -f ${FILENAME} ]; then
+  cat > ${FILENAME} <<EOF
+---
+layout: "post"
+title: "${1}"
+---
+EOF
+fi
+
+${EDITOR} ${FILENAME}
+
+# vim: ft=zsh
