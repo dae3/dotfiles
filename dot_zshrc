@@ -23,6 +23,8 @@ prompt daniel
 # completion
 # setup completions for things that might exist
 COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod-cli kn func https http dlv)
+typeset -A COMPLETION_FLAGS # things that expect silly flags
+COMPLETION_FLAGS=(gh "-s")
 LOCALCOMP=${HOME}/.config/completion
 fpath+=${LOCALCOMP}
 if [ ! -d ${LOCALCOMP} ]; then
@@ -33,7 +35,7 @@ for c in ${COMPLETIONS}; do
   if [ $? -eq 0 ]; then
     if [ ! -f ${LOCALCOMP}/_$c ] || [ $(which $c) -nt ${LOCALCOMP}/_$c ]; then
       echo "Setting up completion for $c"
-      ($c completion zsh > ${LOCALCOMP}/_$c) || true
+      ($c completion ${COMPLETION_FLAGS[$c]} zsh > ${LOCALCOMP}/_$c) || true
     fi
   fi
 done
