@@ -274,3 +274,10 @@ augroup clj
   au!
   au FileType clojure setlocal omnifunc=fireplace#omnicomplete
 augroup END
+
+" factor
+augroup factor
+  au!
+  " this could be better
+  au FileType factor setlocal runtimepath+=/usr/local/factor/misc/vim
+augroup END
