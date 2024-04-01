@@ -1,0 +1,12 @@
+set -e
+
+GCV=jekyll-gem-cache
+docker volume ls --format='{{.Name}}' | grep $GCV > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "Creating Gem cache volume"
+  docker volume create $GCV > /dev/null
+fi
+
+docker run -it --rm -p 4000:4000 -v $GCV:/gemcache -v ${HOME}/blog-content:/content --name blog-preview jekyll
+
+# vim: ft=zsh
