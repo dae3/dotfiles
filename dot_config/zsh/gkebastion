@@ -1,0 +1,32 @@
+# Find the bastion host in the given project, or current project if none given.
+# ssh to that bastion using IAP, and setup a SOCKS5 proxy on localhost:5000
+
+whence gcloud > /dev/null 2>&1
+if [[ $? -gt 0 ]]; then
+  echo "gcloud not found"
+  return 1
+fi
+
+PROJECT=${1-$(gcloud config get project)}
+
+BASTION=$(gcloud compute instances list --filter="name ~ bastion" --format="value(name)" --project=${PROJECT})
+NBASTION=$(echo ${BASTION} | wc -l)
+
+case ${NBASTION} in
+  0)
+    echo "No bastions found in project ${PROJECT}"
+    break
+    ;;
+  1)
+    gcloud compute ssh ${BASTION} --tunnel-through-iap --ssh-flag "-D 5000" --project ${PROJECT}
+    break
+    ;;
+  *)
+    echo "Multiple bastions found in project ${PROJECT}\n\n${BASTION}"
+    break
+esac
+
+
+
+
+# vim: ft=zsh
