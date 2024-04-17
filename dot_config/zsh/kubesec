@@ -1,0 +1,8 @@
+# Output the values of the given Kubernetes secret
+# $1: secret name
+# $2: (optional) namespace
+
+NS=${2:+--namespace ${2}}
+kubectl ${NS} get secret ${1} -o go-template='{{ range $k,$v := .data }}{{printf "%s: %s\n" $k ($v | base64decode)}}{{ end }}'
+
+# vim: ft=zsh
