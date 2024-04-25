@@ -26,7 +26,6 @@ Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-sexp'
 Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'github/copilot.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
