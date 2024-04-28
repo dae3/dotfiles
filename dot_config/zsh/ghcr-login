@@ -1,0 +1,10 @@
+SCOPES="read:packages"
+if [[ "$1" == "push" ]]; then
+  SCOPES="${SCOPES},write:packages"
+fi
+
+gh auth refresh --scopes=${SCOPES}
+gh auth token | docker login ghcr.io --username dae3 --password-stdin
+
+
+# vim: ft=zsh
