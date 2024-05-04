@@ -12,4 +12,6 @@ export EDITOR=vim
 export RESTIC_REPOSITORY=s3:s3.ap-southeast-2.amazonaws.com/gybofkscjptzvgfcdyiayyxhkaiqzmbv
 {{- end }}
 
+{{- if lookPath "keeper" -}}
 export OPENAI_API_KEY={{ keeperFindPassword "kAK2AaCY1caph9HST4f69Q" }}
+{{ end }}
