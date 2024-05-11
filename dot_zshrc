@@ -59,9 +59,9 @@ zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!
 zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 autoload -U predict-on && predict-on
-zle -N predict-off
 autoload predict-on
 predict-on
+bindkey \Ep predict-toggle
 autoload bashcompinit && bashcompinit
 
 ## annoying things with nonstandard completion setup, ie not
