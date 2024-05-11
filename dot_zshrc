@@ -22,7 +22,7 @@ prompt daniel
 
 # completion
 # setup completions for things that might exist
-COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod-cli kn func https http dlv)
+COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod-cli kn func dlv brew)
 typeset -A COMPLETION_FLAGS # things that expect silly flags
 COMPLETION_FLAGS=(gh "-s")
 LOCALCOMP=${HOME}/.config/completion
