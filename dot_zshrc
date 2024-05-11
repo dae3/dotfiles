@@ -62,6 +62,7 @@ autoload -U predict-on && predict-on
 autoload predict-on
 predict-on
 bindkey \Ep predict-toggle
+bindkey "^r" history-incremental-search-backward
 autoload bashcompinit && bashcompinit
 
 ## annoying things with nonstandard completion setup, ie not
