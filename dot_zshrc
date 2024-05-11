@@ -22,7 +22,7 @@ prompt daniel
 
 # completion
 # setup completions for things that might exist
-COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod-cli kn func dlv brew)
+COMPLETIONS=(chezmoi gh tilt kubectl kind pack podman skaffold minikube helm devpod-cli kn func dlv)
 typeset -A COMPLETION_FLAGS # things that expect silly flags
 COMPLETION_FLAGS=(gh "-s")
 LOCALCOMP=${HOME}/.config/completion
@@ -40,7 +40,12 @@ for c in ${COMPLETIONS}; do
   fi
 done
 
+# hooks for things that might exist
+
 ## completion shinyness
+### homebrew completion hook
+fpath+=$(brew --prefix)/share/zsh/site-functions
+
 autoload -U compinit && compinit
 # don't try the fuzzier completers until second attempt
 zstyle -e ':completion:*' completer '
@@ -93,12 +98,6 @@ function predict-toggle() {
 }
 zle -N predict-toggle predict-toggle
 bindkey '^T' predict-toggle
-
-# hooks for things that might exist
-## homebrew
-if [ -d /home/linuxbrew ]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
 
 ## direnv
 which direnv > /dev/null 2>&1
