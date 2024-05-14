@@ -1,8 +1,15 @@
 # Output the values of the given Kubernetes secret
-# $1: secret name
+# $1: secret name, or blank for all secrets
 # $2: (optional) namespace
 
-NS=${2:+--namespace ${2}}
-kubectl ${NS} get secret ${1} -o go-template='{{ range $k,$v := .data }}{{printf "%s: %s\n" $k ($v | base64decode)}}{{ end }}'
+if [[ -z $1 ]]; then
+  for s in $(kubectl get secret -o go-template='{{ range .items }}{{ printf "%s\n" .metadata.name }}{{ end }}' ${2+--namespace} ${2}) ; do
+    kubesec $s ${2+--namespace} ${2}
+  done
+else
+  echo -n "${1} "
+  kubectl get secret ${1} -o go-template='{{ range $k,$v := .data }}{{printf "%s %s\n" $k ($v | base64decode)}}{{ end }}' ${2+--namespace} ${2}
+fi
+
 
 # vim: ft=zsh

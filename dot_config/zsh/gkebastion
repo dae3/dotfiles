@@ -7,23 +7,25 @@ if [[ $? -gt 0 ]]; then
   return 1
 fi
 
+if [[ "$1" == "list" ]]; then
+  gcloud projects list --format="value(projectId)" --filter="name ~ gke AND name ~ 'base$'"
+  return
+fi
+
 PROJECT=${1-$(gcloud config get project)}
 
-BASTION=$(gcloud compute instances list --filter="name ~ bastion" --format="value(name)" --project=${PROJECT})
-NBASTION=$(echo ${BASTION} | wc -l)
+read -s HOST ZONE <<<$(gcloud compute instances list --filter="name ~ bastion" --format="value(name,zone)" --project=${PROJECT})
+NBASTION=$(echo ${host} | wc -l)
 
 case ${NBASTION} in
   0)
     echo "No bastions found in project ${PROJECT}"
-    break
     ;;
   1)
-    gcloud compute ssh ${BASTION} --tunnel-through-iap --ssh-flag "-D 5000" --project ${PROJECT}
-    break
+    gcloud compute ssh ${HOST} --zone=${ZONE} --tunnel-through-iap --ssh-flag "-D 5000" --project ${PROJECT}
     ;;
   *)
     echo "Multiple bastions found in project ${PROJECT}\n\n${BASTION}"
-    break
 esac
 
 
