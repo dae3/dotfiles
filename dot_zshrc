@@ -44,7 +44,10 @@ done
 
 ## completion shinyness
 ### homebrew completion hook
-fpath+=$(brew --prefix)/share/zsh/site-functions
+whence brew > /dev/null
+if [[ $? -eq 0 ]]; then
+  fpath+=$(brew --prefix)/share/zsh/site-functions
+fi
 
 autoload -U compinit && compinit
 # don't try the fuzzier completers until second attempt
