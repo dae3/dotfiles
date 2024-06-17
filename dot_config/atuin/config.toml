@@ -54,7 +54,7 @@
 
 ## which style to use
 ## possible values: auto, full, compact
-# style = "auto"
+style = "compact"
 
 ## the maximum number of lines the interface should take up
 ## set it to 0 to always go full screen
@@ -136,6 +136,6 @@ enter_accept = true
 #  "pnpm",
 #  "kubectl",
 #]
-# 
+#
 # Set commands that should be totally stripped and ignored from stats
 #common_prefix = ["sudo"]
