@@ -15,6 +15,10 @@ then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+  PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
+fi
+
 # prompt theme
 autoload -Uz promptinit
 promptinit
