@@ -280,3 +280,9 @@ augroup factor
   " this could be better
   au FileType factor setlocal runtimepath+=/usr/local/factor/misc/vim
 augroup END
+
+" zettlekasten
+function! InsertZkTitle()
+  let l:title = '# ' . strftime('%G%m%d%H%M')
+  call append(0, l:title)
+endfunction
