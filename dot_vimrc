@@ -282,7 +282,11 @@ augroup factor
 augroup END
 
 " zettlekasten
-function! InsertZkTitle()
-  let l:title = '# ' . strftime('%G%m%d%H%M')
-  call append(0, l:title)
+function! InsertZkTitleAndSave(title)
+  let l:title = strftime('%G%m%d%H%M') . ' ' . a:title
+  call append(0, '# ' . l:title)
+  let l:filename = tolower(substitute(l:title, '[^a-zA-Z0-9]', '-', 'g')) . '.md'
+  execute 'write ' . '~/zk/' . l:filename
 endfunction
+
+command -nargs=+ NewZk call InsertZkTitleAndSave(<q-args>)
