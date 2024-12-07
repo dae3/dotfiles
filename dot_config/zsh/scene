@@ -5,7 +5,7 @@ if [[ -z $1 ]]; then
   print "Usage is scene <scenename>"
   return 2
 else
-  curl -s -H 'Content-Type: text/plain' https://home.nothingtosee.host/rest/items/MasterScene -d $1
+  curl -s -H 'Content-Type: text/plain' https://home.nothingtosee.host/rest/items/MasterScene -d ${1:u}
 fi
 
 # vim: ft=zsh
