@@ -290,3 +290,43 @@ function! InsertZkTitleAndSave(title)
 endfunction
 
 command -nargs=+ NewZk call InsertZkTitleAndSave(<q-args>)
+
+" Tagbar HTML improvemens
+function! HtmlBreadcrumb()
+  let l:lnum = line('.')
+  let l:tag_stack = []
+  let l:seen_tags = {}
+
+  " Walk backward from the current line
+  for l:curr in reverse(range(1, l:lnum))
+    let l:line = getline(l:curr)
+
+    " Match opening HTML tags
+    if l:line =~ '<\s*\zs\w\+\ze[^>/]*>'
+      let l:tag = matchstr(l:line, '<\s*\zs\w\+\ze[^>/]*>')
+      if has_key(l:seen_tags, l:tag)
+        continue " Skip if we already added this tag
+      endif
+
+      " Extract id and class
+      let l:tag_id = matchstr(l:line, 'id\s*=\s*"\zs[^"]\+\ze"')
+      let l:tag_class = matchstr(l:line, 'class\s*=\s*"\zs[^"]\+\ze"')
+
+      let l:label = l:tag
+      if !empty(l:tag_id)
+        let l:label .= '#' . l:tag_id
+      endif
+      if !empty(l:tag_class)
+        let l:classes = substitute(l:tag_class, '\s\+', '.', 'g')
+        let l:label .= '.' . l:classes
+      endif
+
+      call add(l:tag_stack, l:label)
+      let l:seen_tags[l:tag] = 1
+    endif
+  endfor
+
+  return join(reverse(l:tag_stack), ' > ')
+endfunction
+
+let g:airline_section_y = '%{HtmlBreadcrumb()}'
