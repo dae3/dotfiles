@@ -71,8 +71,6 @@ zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!
 zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 autoload -U predict-on && predict-on
-autoload predict-on
-predict-on
 bindkey \Ep predict-toggle
 bindkey "^r" history-incremental-search-backward
 autoload bashcompinit && bashcompinit
@@ -100,11 +98,23 @@ fi
 ## keybindings
 bindkey -v
 bindkey ^X^K vi-kill-eol
+
+## prediction toggle cleverness
 function predict-toggle() {
-  print $ZLE_STATE
+  if [[ "$PREDICT_STATE" == "on" ]]; then
+    predict-off
+    PREDICT_STATE="off"
+    zle -M "Prediction: OFF"
+  else
+    predict-on
+    PREDICT_STATE="on"
+    zle -M "Prediction: ON"
+  fi
 }
-zle -N predict-toggle predict-toggle
-bindkey '^T' predict-toggle
+zle -N predict-toggle
+bindkey '^P' predict-toggle
+zstyle ':predict' toggle true
+zstyle ':predict' verbose true
 
 ## direnv
 which direnv > /dev/null 2>&1
