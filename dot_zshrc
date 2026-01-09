@@ -140,3 +140,5 @@ if [[ $? -eq 0 ]] && [[ -f ~/.atuin ]]; then
 fi
 
 # vim: ft=zsh ff=unix sw=2 ts=2 ai et
+
+. "$HOME/.local/share/../bin/env"
