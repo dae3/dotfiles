@@ -10,8 +10,11 @@ export EDITOR=vim
 
 {{- if eq .chezmoi.hostname "fedora" }}
 export RESTIC_REPOSITORY=s3:s3.ap-southeast-2.amazonaws.com/gybofkscjptzvgfcdyiayyxhkaiqzmbv
+export SUDO_ASKPASS=/usr/libexec/openssh/gnome-ssh-askpass
 {{- end }}
 
 {{- if lookPath "keeper" -}}
 export OPENAI_API_KEY={{ keeperFindPassword "kAK2AaCY1caph9HST4f69Q" }}
 {{ end }}
+
+set -x SUDO_ASKPASS=/usr/bin/systemd-ask-password
