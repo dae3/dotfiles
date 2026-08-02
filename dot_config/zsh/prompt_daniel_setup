@@ -6,7 +6,7 @@ daniel_theme_precmd() {
 
 # make SHLVL "correct" even within tmux
 function daniel_theme_shlvl {
-  if [[ -n ${TMUX} ]]; then
+  if [[ -n ${TMUX} ]] || [[ -n ${XDG_SESSION_ID} ]]; then
     adj_shlvl=$(( ${SHLVL} - 1 ))
   else
     adj_shlvl=${SHLVL}
