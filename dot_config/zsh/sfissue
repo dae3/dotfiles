@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+# Quickly add a swayfin issue, with
+# - assignee me
+# - body ready from stdin, default to empty
+# - title read from $1
+
+if [[ "${PWD}" != "~/projects/swayfin" ]]; then
+  echo "Run from swayfin working directory"
+  return 1
+fi
+
+if [[ -z "$1" ]]; then
+  echo "Provide title as first arg"
+  return 1
+fi
+
+if gh auth status >& /dev/null; then
+  echo "Auth to GitHub first"
+  return 1
+fi
+
+echo "Creating, enter body..."
+gh issue create --assignee '@me' --title $1 -F -
