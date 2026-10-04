@@ -4,8 +4,8 @@
 # - assignee me
 # - body ready from stdin, default to empty
 # - title read from $1
-
-if [[ "${PWD}" != "~/projects/swayfin" ]]; then
+#
+if [[ ${PWD} != ~/projects/swayfin ]]; then
   echo "Run from swayfin working directory"
   return 1
 fi
@@ -15,10 +15,10 @@ if [[ -z "$1" ]]; then
   return 1
 fi
 
-if gh auth status >& /dev/null; then
+if ! gh auth status >& /dev/null; then
   echo "Auth to GitHub first"
   return 1
 fi
 
-echo "Creating, enter body..."
+echo "Creating, enter body followed by EOF..."
 gh issue create --assignee '@me' --title $1 -F -
