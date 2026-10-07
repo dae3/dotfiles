@@ -17,4 +17,4 @@ export SUDO_ASKPASS=/usr/libexec/openssh/gnome-ssh-askpass
 export OPENAI_API_KEY={{ keeperFindPassword "kAK2AaCY1caph9HST4f69Q" }}
 {{ end }}
 
-set -x SUDO_ASKPASS=/usr/bin/systemd-ask-password
+export SUDO_ASKPASS=/usr/bin/systemd-ask-password
