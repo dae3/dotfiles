@@ -32,6 +32,8 @@ Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'tpope/vim-repeat'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'rhysd/vim-lsp-ale'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
 call plug#end()
 filetype plugin indent on
 
@@ -176,6 +178,16 @@ au User lsp_setup call lsp#register_server({
       \ 'allowlist': ['clojure'],
       \ })
 
+" clojure-lsp completion: manual via <C-x><C-o> (lsp omnifunc) and
+" automatic (as-you-type) via asyncomplete-lsp. Turn ALE's completion off
+" for clojure so it doesn't clobber 'omnifunc', and override the omnifunc that
+" vim-fireplace sets on FileType clojure.
+autocmd FileType clojure setlocal omnifunc=lsp#complete
+autocmd FileType clojure let b:ale_completion_enabled = 0
+autocmd User lsp_buffer_enabled setlocal omnifunc=lsp#complete
+" keep our own completeopt instead of letting asyncomplete replace it
+let g:asyncomplete_auto_completeopt = 0
+
 nnoremap <silent> ]c :ALENextWrap<cr>
 nnoremap <silent> [c :ALEPreviousWrap<cr>
 nnoremap <silent> K :ALEHover<cr>
@@ -269,10 +281,7 @@ endif
 command! -nargs=0 AutoSaveOn au! CursorHold,CursorHoldI <buffer> silent! write
 
 " clojure{script}
-augroup clj
-  au!
-  au FileType clojure setlocal omnifunc=fireplace#omnicomplete
-augroup END
+" (completion configured above, alongside the clojure-lsp registration)
 
 " factor
 augroup factor
